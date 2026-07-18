@@ -72,7 +72,7 @@ Env override: `CAPACITOR_PACKAGE_MODE=shared|isolate|auto`
 
 ## Build numbers (per branch)
 
-Each branch maintains its own counter in `buildinfo-{branch}.json` (gitignored). Every `npm run build` increments `versionCode` and writes `src/config/buildinfo-generated.ts` for the UI.
+Each branch maintains its own counter in `buildinfo-{branch}.json` (**committed**). The branch name in the filename lets parallel branches each track a version without fighting over a single shared file on merge. Every `npm run build` increments `versionCode` and writes `src/config/buildinfo-generated.ts` (gitignored) for the UI.
 
 Gradle reads the same file for APK/AAB `versionCode` and `versionName`.
 

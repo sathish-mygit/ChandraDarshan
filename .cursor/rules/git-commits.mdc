@@ -1,0 +1,12 @@
+---
+description: User handles git commits; never commit unless explicitly asked
+alwaysApply: true
+---
+
+# Git commits
+
+The user commits their own work. **Do not** run `git commit`, stage files for commit, or offer to commit as a default follow-up.
+
+Only create a commit when the user **explicitly** asks (e.g. "commit this", "create a commit").
+
+When asked to commit, follow the repo's commit message style and never commit secrets (`.env.local`, credentials, etc.).

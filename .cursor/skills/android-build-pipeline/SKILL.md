@@ -75,6 +75,17 @@ cap sync android
 
 Full APK pipeline (`npm run build:android:dev`) adds Gradle `assembleDevDebug` or `assembleProdRelease` after sync.
 
+### Per-branch build metadata (committed)
+
+| File | In git? | Role |
+|------|---------|------|
+| `buildinfo-{branch}.json` | **Yes — commit after build** | Source of truth for `versionCode`, `versionName`, `buildNumber` on this branch |
+| `src/config/buildinfo-generated.ts` | No (gitignored) | UI-facing snapshot regenerated each build from the JSON |
+
+**Why branch in the filename:** so each branch commits its own counter (`buildinfo-develop.json`, `buildinfo-feature-foo.json`, …) instead of one shared `buildinfo.json` that would conflict on every merge. Do **not** gitignore `buildinfo-*.json`. Do **not** rename to a single file.
+
+Gradle and `next.config.ts` read `buildinfo-{currentBranch}.json` via the same branch name from git.
+
 ---
 
 ## Naming conventions
@@ -171,6 +182,7 @@ Until then, flavors and env wiring are in place; no `google-services` plugin is 
 | `scripts/apply-build-env.cjs` | Loads env before `next build` |
 | `scripts/next-build.mjs` | Env + `next build` |
 | `scripts/build-android.mjs` | Full web + sync + Gradle APK |
-| `scripts/increment-build.cjs` | Per-branch version increment |
+| `scripts/increment-build.cjs` | Per-branch version increment; updates committed `buildinfo-{branch}.json` |
+| `buildinfo-{branch}.json` | Committed per-branch version counter (not gitignored) |
 | `capacitor.config.ts` | `appId` / `appName` from manifest |
 | `android/app/build.gradle` | Flavors, versions, artifact naming |

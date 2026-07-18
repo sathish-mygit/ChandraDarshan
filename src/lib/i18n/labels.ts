@@ -26,6 +26,7 @@ type LabelKey =
   | 'calendarPrefs'
   | 'tabToday'
   | 'tabJyotish'
+  | 'tabSettings'
   | 'jyotishTitle'
   | 'forYouToday'
   | 'birthChart'
@@ -33,6 +34,8 @@ type LabelKey =
   | 'birthDate'
   | 'birthTime'
   | 'timeUnknown'
+  | 'timeNotSpecified'
+  | 'addBirthTime'
   | 'birthPlace'
   | 'saveProfile'
   | 'editBirthDetails'
@@ -258,6 +261,13 @@ const LABELS: Record<LabelKey, Record<AppLanguage, string>> = {
     te: 'జ్యోతిషం',
     ta: 'ஜோதிடம்',
   },
+  tabSettings: {
+    en: 'Settings',
+    hi: 'सेटिंग्स',
+    sa: 'विन्यासाः',
+    te: 'సెట్టింగ్‌లు',
+    ta: 'அமைப்புகள்',
+  },
   jyotishTitle: {
     en: 'Personal Jyotish',
     hi: 'व्यक्तिगत ज्योतिष',
@@ -301,11 +311,25 @@ const LABELS: Record<LabelKey, Record<AppLanguage, string>> = {
     ta: 'பிறந்த நேரம்',
   },
   timeUnknown: {
-    en: "I don't know the exact time",
-    hi: 'सटीक समय नहीं पता',
-    sa: 'समयं न जानामि',
-    te: 'ఖచ్చితమైన సమయం తెలియదు',
-    ta: 'சரியான நேரம் தெரியவில்லை',
+    en: "I don't know my birth time",
+    hi: 'जन्म समय नहीं पता',
+    sa: 'जन्मसमयं न जानामि',
+    te: 'జన్మ సమయం తెలియదు',
+    ta: 'பிறந்த நேரம் தெரியவில்லை',
+  },
+  timeNotSpecified: {
+    en: 'Time not specified',
+    hi: 'समय निर्दिष्ट नहीं',
+    sa: 'समयः निर्दिष्टः न',
+    te: 'సమయం పేర్కొనలేదు',
+    ta: 'நேரம் குறிப்பிடப்படவில்லை',
+  },
+  addBirthTime: {
+    en: 'Add birth time',
+    hi: 'जन्म समय जोड़ें',
+    sa: 'जन्मसमयं योजयतु',
+    te: 'జన్మ సమయం జోడించండి',
+    ta: 'பிறந்த நேரத்தைச் சேர்',
   },
   birthPlace: {
     en: 'Place of birth',
