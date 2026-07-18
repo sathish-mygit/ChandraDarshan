@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { HelpCircle } from 'lucide-react';
+import { ANALYTICS_EVENTS, glossaryOpenedParams, logEvent } from '@/lib/analytics';
 import type { GlossaryTermId } from '@/lib/i18n/glossary';
 import { getGlossaryTerm } from '@/lib/i18n/glossary';
 import type { AppLanguage } from '@/lib/types';
@@ -21,7 +22,18 @@ export function LearnTooltip({ termId, language, className }: LearnTooltipProps)
     <span className={cn('relative inline-flex', className)}>
       <button
         type="button"
-        onClick={() => setOpen((value) => !value)}
+        onClick={() => {
+          setOpen((value) => {
+            const nextOpen = !value;
+            if (nextOpen) {
+              logEvent(
+                ANALYTICS_EVENTS.GLOSSARY_OPENED,
+                glossaryOpenedParams(termId),
+              );
+            }
+            return nextOpen;
+          });
+        }}
         className="text-amber-500/70 transition hover:text-amber-300"
         aria-label="Learn more"
       >

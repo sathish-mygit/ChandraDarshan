@@ -45,7 +45,9 @@ export function BirthProfileForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="text-sm text-slate-400">Name (optional)</label>
+        <label className="text-sm text-slate-400">
+          {t('userName', language)}
+        </label>
         <input
           type="text"
           value={name}

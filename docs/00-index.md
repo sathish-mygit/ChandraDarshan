@@ -22,9 +22,10 @@ Read in order: **01-project** → **02-decisions** → **03-setup** → **04-arc
 | # | Document | Status | Purpose |
 |---|----------|--------|---------|
 | 01 | [local dev](03-setup/01-local-dev.md) | Active | npm install, dev server |
-| 02 | `02-firebase.md` | Planned | Firebase project setup |
+| 02 | [firebase](03-setup/02-firebase.md) | Active | Prod Analytics + Crashlytics setup |
 | 03 | `03-admob.md` | Planned | AdMob registration |
 | 04 | [android build](03-setup/04-android-build.md) | Active | Capacitor Android flavors, branch pipeline |
+| 05 | [branding assets](03-setup/05-branding-assets.md) | Active | App icon, splash screen, favicon workflow |
 
 ## 04-architecture
 

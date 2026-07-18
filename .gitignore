@@ -37,6 +37,7 @@ yarn-error.log*
 # generated build pipeline artifacts
 android/.package-resolved.json
 .capacitor-package-mode
+android/app/src/prod/google-services.json
 
 # vercel
 .vercel
@@ -46,4 +47,4 @@ android/.package-resolved.json
 next-env.d.ts
 
 # regenerated on each build from buildinfo-{branch}.json (see scripts/increment-build.cjs)
-src/config/buildinfo-generated.ts
+# src/config/buildinfo-generated.ts — committed fallback; overwritten locally on build

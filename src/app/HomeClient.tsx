@@ -29,18 +29,32 @@ export function HomeClient() {
           <div className="mx-auto h-40 w-40 animate-pulse rounded-full border border-amber-500/10 bg-slate-900/60" />
         )}
 
-        <div className="space-y-3">
+        <div className="space-y-2">
           <p className="text-sm uppercase tracking-[0.3em] text-amber-500/80">
             {t('appTitle', preferences.language)}
           </p>
-          <h1
-            className={cn(
-              'text-3xl font-semibold text-amber-50',
-              scriptFont,
-            )}
-          >
-            {t('dailyMoon', preferences.language)}
-          </h1>
+          {birthProfile?.name ? (
+            <>
+              <p className="text-sm text-slate-500">
+                {t('dailyMoon', preferences.language)}
+              </p>
+              <p className="text-sm text-slate-400">
+                {t('greetingPrefix', preferences.language)}
+              </p>
+              <h1 className="text-3xl font-semibold text-amber-50">
+                {birthProfile.name}
+              </h1>
+            </>
+          ) : (
+            <h1
+              className={cn(
+                'text-xl font-medium text-slate-400',
+                scriptFont,
+              )}
+            >
+              {t('dailyMoon', preferences.language)}
+            </h1>
+          )}
         </div>
 
         {isLoading ? (

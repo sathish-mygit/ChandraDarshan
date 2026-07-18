@@ -28,10 +28,16 @@ A daily Indian lunar calendar app. When users open it, they see the moon phase a
 - Beginner glossary tooltips and templated daily guidance
 - Home teaser link when birth profile exists
 
+## Phase 4 status (partial)
+
+- Firebase Analytics + Crashlytics wiring (prod flavor only) — see [02-firebase.md](../03-setup/02-firebase.md)
+- Page tracking, preference/Jyotish custom events, Crashlytics on native Android
+- Firebase project + `google-services.json` — you add in Console when ready
+
 ## Not yet implemented
 
 - i18n polish beyond core labels — ongoing
-- Firebase, Remote Config, AdMob — Phase 4+
+- Remote Config, AdMob — later
 - Kundli wheel, Navamsa, doshas, matching — deferred per ADR-004
 
 ## Key paths
@@ -44,6 +50,7 @@ A daily Indian lunar calendar app. When users open it, they see the moon phase a
 | `src/lib/panchang/service.ts` | Panchang computation |
 | `src/lib/jyotish/` | Natal + personal today |
 | `src/lib/preferences.ts` | User settings persistence |
+| `src/lib/analytics/` | Firebase Analytics + Crashlytics bridge |
 | `capacitor.config.ts` | Native app ID / name (from package manifest) |
 | `scripts/` | Build pipeline: flavor resolve, env, version increment |
 | `docs/00-index.md` | Documentation hub |

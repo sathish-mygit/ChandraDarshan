@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect } from 'react';
-import { Capacitor } from '@capacitor/core';
 import { AppPreferencesProvider } from '@/contexts/AppPreferencesContext';
+import { AnalyticsTracker } from '@/components/AnalyticsTracker';
 import { AppHeader } from '@/components/AppHeader';
+import { AppTelemetry } from '@/components/AppTelemetry';
 import { BottomNav } from '@/components/BottomNav';
 
 export default function AppContent({
@@ -11,14 +11,10 @@ export default function AppContent({
 }: {
   children: React.ReactNode;
 }) {
-  useEffect(() => {
-    if (Capacitor.isNativePlatform()) {
-      document.documentElement.dataset.platform = Capacitor.getPlatform();
-    }
-  }, []);
-
   return (
     <AppPreferencesProvider>
+      <AnalyticsTracker />
+      <AppTelemetry />
       <div className="relative flex min-h-screen flex-col bg-background text-foreground">
         <AppHeader />
         <div

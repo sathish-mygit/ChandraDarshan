@@ -83,7 +83,10 @@ type LabelKey =
   | 'dashaTimelineIntro'
   | 'dailyReading'
   | 'favorToday'
-  | 'pauseToday';
+  | 'pauseToday'
+  | 'userName'
+  | 'greeting'
+  | 'greetingPrefix';
 
 const LABELS: Record<LabelKey, Record<AppLanguage, string>> = {
   appTitle: {
@@ -667,10 +670,35 @@ const LABELS: Record<LabelKey, Record<AppLanguage, string>> = {
     te: 'ఆగండి లేదా నివారించండి',
     ta: 'நிறுத்து அல்லது தவிர்',
   },
+  userName: {
+    en: 'Name (optional)',
+    hi: 'नाम (वैकल्पिक)',
+    sa: 'नाम (वैकल्पिकम्)',
+    te: 'పేరు (ఐచ్ఛికం)',
+    ta: 'பெயர் (விருப்பம்)',
+  },
+  greeting: {
+    en: 'Namaste, {name}',
+    hi: 'नमस्ते, {name}',
+    sa: 'नमस्ते, {name}',
+    te: 'నమస్కారం, {name}',
+    ta: 'வணக்கம், {name}',
+  },
+  greetingPrefix: {
+    en: 'Namaste,',
+    hi: 'नमस्ते,',
+    sa: 'नमस्ते,',
+    te: 'నమస్కారం,',
+    ta: 'வணக்கம்,',
+  },
 };
 
 export function t(key: LabelKey, language: AppLanguage): string {
   return LABELS[key][language];
+}
+
+export function greeting(name: string, language: AppLanguage): string {
+  return t('greeting', language).replace('{name}', name);
 }
 
 export type { LabelKey };
