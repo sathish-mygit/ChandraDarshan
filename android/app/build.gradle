@@ -1,0 +1,261 @@
+apply plugin: 'com.android.application'
+
+import groovy.json.JsonSlurper
+import java.lang.ProcessBuilder
+import com.android.build.gradle.internal.tasks.FinalizeBundleTask
+
+def currentBranch = 'unknown'
+try {
+    def process = new ProcessBuilder('git', 'rev-parse', '--abbrev-ref', 'HEAD').redirectErrorStream(true).start()
+    currentBranch = process.getInputStream().getText().trim()
+    process.waitFor()
+} catch (Exception e) {
+    println "Could not detect git branch: ${e.message}"
+}
+
+def sanitizeBranchSuffix(String branchName) {
+    if (branchName == 'main' || branchName == 'master' || branchName == 'HEAD') {
+        return 'main'
+    } else if (branchName == 'develop') {
+        return 'develop'
+    }
+    return branchName.replaceAll(/[^a-zA-Z0-9]/, '_').toLowerCase()
+}
+
+def shouldIsolateDevPackage(String branchName, String mode) {
+    if (mode == 'shared') {
+        return false
+    }
+    if (mode == 'isolate') {
+        return true
+    }
+    return branchName != 'develop' && branchName != 'main' && branchName != 'master' && branchName != 'HEAD'
+}
+
+def resolveDevApplicationIdGroovy(String branchName, String mode) {
+    def canonicalDev = 'com.sathish.utilites.chandra_darshan.dev'
+    if (!shouldIsolateDevPackage(branchName, mode)) {
+        return canonicalDev
+    }
+    return "${canonicalDev}.${sanitizeBranchSuffix(branchName)}"
+}
+
+def resolveArtifactTagDevGroovy(String branchName, String mode) {
+    if (!shouldIsolateDevPackage(branchName, mode)) {
+        return 'dev'
+    }
+    return "dev_${sanitizeBranchSuffix(branchName)}"
+}
+
+def resolvePackageModeGroovy() {
+    def envMode = System.getenv('CAPACITOR_PACKAGE_MODE')
+    if (envMode in ['auto', 'shared', 'isolate']) {
+        return envMode
+    }
+    def modeFile = new File(rootDir.parentFile, '.capacitor-package-mode')
+    if (modeFile.exists()) {
+        def fileMode = modeFile.text.trim().toLowerCase()
+        if (fileMode in ['shared', 'isolate']) {
+            return fileMode
+        }
+    }
+    return 'auto'
+}
+
+def packageResolvedFile = new File(rootDir, '.package-resolved.json')
+def packageModeFallback = resolvePackageModeGroovy()
+def packageResolved = [
+    branch: currentBranch,
+    packageMode: packageModeFallback,
+    prodApplicationId: 'com.sathish.utilites.chandra_darshan',
+    devApplicationId: resolveDevApplicationIdGroovy(currentBranch, packageModeFallback),
+    prodAppName: 'Chandra Darshan',
+    devAppName: shouldIsolateDevPackage(currentBranch, packageModeFallback)
+        ? "[${currentBranch.replaceAll(/^(feature|bugfix|hotfix)\\//, '').replaceAll('_', '-')}] Chandra Darshan"
+        : '[Dev] Chandra Darshan',
+    artifactTagProd: 'prod',
+    artifactTagDev: resolveArtifactTagDevGroovy(currentBranch, packageModeFallback),
+    isCanonicalDev: resolveDevApplicationIdGroovy(currentBranch, packageModeFallback) == 'com.sathish.utilites.chandra_darshan.dev',
+]
+
+if (packageResolvedFile.exists()) {
+    try {
+        packageResolved = new JsonSlurper().parse(packageResolvedFile)
+        println "Package manifest: ${packageResolved.devApplicationId} (dev), ${packageResolved.prodApplicationId} (prod)"
+    } catch (Exception e) {
+        println "Could not parse .package-resolved.json: ${e.message}, using branch fallback"
+    }
+} else {
+    println ".package-resolved.json not found — run npm run build first; using branch fallback"
+}
+
+def buildInfoFile = new File(rootDir.parentFile, "buildinfo-${currentBranch}.json")
+def appVersionCode = currentBranch == 'main' ? 1 : 1
+def appVersionName = currentBranch == 'main' ? '0.1.0' : '0.0.1'
+
+if (buildInfoFile.exists()) {
+    try {
+        def buildInfo = new JsonSlurper().parse(buildInfoFile)
+        appVersionCode = buildInfo.versionCode ?: appVersionCode
+        appVersionName = buildInfo.versionName ?: appVersionName
+        println "Read versions from buildinfo-${currentBranch}.json: versionCode=${appVersionCode}, versionName=${appVersionName}"
+    } catch (Exception e) {
+        println "Could not parse buildinfo-${currentBranch}.json: ${e.message}, using defaults"
+    }
+} else {
+    println "buildinfo-${currentBranch}.json not found (will be created on first build), using defaults"
+}
+
+def resolveNextAabBaseName(File dir, String base) {
+    def maxV = 0
+    if (dir.exists()) {
+        def escapedBase = java.util.regex.Pattern.quote(base)
+        def versionedPattern = ~/^${escapedBase}_v(\d+)\.aab$/
+        dir.eachFile { file ->
+            def matcher = (file.name =~ versionedPattern)
+            if (matcher.matches()) {
+                maxV = Math.max(maxV, matcher.group(1) as int)
+            }
+        }
+    }
+    return "${base}_v${maxV + 1}"
+}
+
+android {
+    namespace "com.sathish.utilites.chandra_darshan"
+    compileSdk rootProject.ext.compileSdkVersion
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode appVersionCode
+        versionName appVersionName
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        aaptOptions {
+            ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    flavorDimensions "environment"
+    productFlavors {
+        dev {
+            dimension "environment"
+            applicationId packageResolved.devApplicationId
+            resValue "string", "app_name", packageResolved.devAppName
+            resValue "string", "title_activity_main", packageResolved.devAppName
+            resValue "string", "package_name", packageResolved.devApplicationId
+            resValue "string", "custom_url_scheme", packageResolved.devApplicationId
+        }
+        prod {
+            dimension "environment"
+            applicationId packageResolved.prodApplicationId
+            resValue "string", "app_name", packageResolved.prodAppName
+            resValue "string", "title_activity_main", packageResolved.prodAppName
+            resValue "string", "package_name", packageResolved.prodApplicationId
+            resValue "string", "custom_url_scheme", packageResolved.prodApplicationId
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def flavorName = variant.flavorName
+            def tag = flavorName == 'prod' ? packageResolved.artifactTagProd : packageResolved.artifactTagDev
+            if (variant.buildType.name == 'release') {
+                outputFileName = "chandra_darshan_${variant.versionName}_${variant.versionCode}_${tag}.apk"
+            } else if (variant.buildType.name == 'debug') {
+                outputFileName = "chandra_darshan_${variant.versionName}_${variant.versionCode}_${tag}_debug.apk"
+            }
+        }
+    }
+
+    bundle {
+        density.enableSplit = true
+        abi.enableSplit = true
+    }
+}
+
+repositories {
+    flatDir {
+        dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
+    implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
+    implementation project(':capacitor-android')
+    testImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
+    implementation project(':capacitor-cordova-android-plugins')
+}
+
+apply from: 'capacitor.build.gradle'
+
+task readBuildInfo {
+    doLast {
+        def buildInfoFilePath = new File(rootDir.parentFile, "buildinfo-${currentBranch}.json")
+        if (buildInfoFilePath.exists()) {
+            try {
+                def buildInfo = new JsonSlurper().parse(buildInfoFilePath)
+                def versionCode = buildInfo.versionCode ?: 1
+                def versionName = buildInfo.versionName ?: '0.1.0'
+                android.defaultConfig.versionCode versionCode
+                android.defaultConfig.versionName versionName
+                println "[preBuild] Updated versions: versionCode=${versionCode}, versionName=${versionName}"
+            } catch (Exception e) {
+                println "[preBuild] Could not parse buildinfo-${currentBranch}.json: ${e.message}"
+            }
+        }
+    }
+}
+
+preBuild.dependsOn readBuildInfo
+
+afterEvaluate {
+    android.applicationVariants.all { variant ->
+        if (variant.buildType.name == 'release') {
+            variant.packageApplicationProvider.get().doLast {
+                def tag = variant.flavorName == 'prod' ? packageResolved.artifactTagProd : packageResolved.artifactTagDev
+                def expectedApkName = "chandra_darshan_${variant.versionName}_${variant.versionCode}_${tag}.apk"
+                def outputDir = new File(layout.buildDirectory.asFile.get(), "outputs/apk/${variant.flavorName}/release")
+                if (outputDir.exists()) {
+                    outputDir.eachFile { file ->
+                        if (file.name.endsWith('.apk') && file.name != expectedApkName) {
+                            def newFile = new File(outputDir, expectedApkName)
+                            if (file.renameTo(newFile)) {
+                                println "[APK] Renamed to ${expectedApkName}"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    android.applicationVariants.configureEach { variant ->
+        if (variant.buildType.name != 'release') {
+            return
+        }
+        def tag = variant.flavorName == 'prod' ? packageResolved.artifactTagProd : packageResolved.artifactTagDev
+        def capName = variant.name.substring(0, 1).toUpperCase() + variant.name.substring(1)
+        def bundleTaskName = "sign${capName}Bundle"
+        if (tasks.findByName(bundleTaskName) == null) {
+            return
+        }
+        tasks.named(bundleTaskName, FinalizeBundleTask).configure { bundleTask ->
+            def defaultFile = bundleTask.finalBundleFile.asFile.get()
+            def dir = defaultFile.parentFile
+            def base = "chandra_darshan_${variant.versionName}_${variant.versionCode}_${tag}"
+            def finalFile = new File(dir, "${resolveNextAabBaseName(dir, base)}.aab")
+            bundleTask.finalBundleFile.set(finalFile)
+            println "[AAB] Release bundle will be named: ${finalFile.name}"
+        }
+    }
+}

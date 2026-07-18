@@ -1,0 +1,18 @@
+---
+description: Documentation layout — follow global project-documentation skill
+alwaysApply: true
+---
+
+# Documentation
+
+Follow the personal skill **`project-documentation`** at `~/.cursor/skills/project-documentation/SKILL.md` for all markdown in this repo.
+
+## This project
+
+- Master index: [docs/00-index.md](docs/00-index.md)
+- **No** markdown in repo root except `README.md`
+- Decisions → `docs/02-decisions/adr-NNN-*.md`
+- Setup guides → `docs/03-setup/`
+- Agent playbooks → `.cursor/skills/` (create per phase after code lands)
+
+When adding or changing docs, update `docs/00-index.md` in the same change.

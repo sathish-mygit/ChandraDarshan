@@ -1,0 +1,27 @@
+---
+description: Build and deployment workflow guidelines
+alwaysApply: true
+---
+
+# Build & Deployment Workflow
+
+## User handles builds
+
+Do **not** automatically run `npm run build` after code changes unless the user explicitly asks.
+
+Your role:
+1. Make code changes
+2. Run lint or typecheck if helpful
+3. Tell the user changes are ready and which commands to run
+
+## Allowed
+
+- `npm run dev`
+- `npm run lint`
+- `npm run typecheck` / `npx tsc --noEmit`
+
+## User runs for production / Android
+
+- `npm run build`
+- `npx cap run android`
+- `npm run cap:android`
