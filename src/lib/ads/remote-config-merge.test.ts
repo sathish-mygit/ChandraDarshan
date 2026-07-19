@@ -9,7 +9,7 @@ describe('mergeConfigWithDefaults', () => {
       settings: { 'banner.home': false },
     });
     expect(merged.settings['banner.home']).toBe(false);
-    expect(merged.settings['ads.master']).toBe(true);
+    expect(merged.settings['ads.master']).toBe(false);
   });
 
   it('routes interstitial limits into interstitial object', () => {

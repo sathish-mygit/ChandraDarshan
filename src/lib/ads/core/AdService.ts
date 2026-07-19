@@ -259,7 +259,7 @@ export class AdService {
   isPlacementEnabled(placement: string): boolean {
     if (this.settings['ads.master'] === false) return false;
     const value = this.settings[placement];
-    return value === undefined ? true : !!value;
+    return value === undefined ? false : !!value;
   }
 
   async checkConsent(): Promise<void> {
@@ -549,7 +549,7 @@ export class AdService {
     }
     if (this.settings['ads.master'] === false) return false;
     const value = this.settings[key];
-    return value === undefined ? true : !!value;
+    return value === undefined ? false : !!value;
   }
 
   setEnabled(key: string, value: boolean): void {

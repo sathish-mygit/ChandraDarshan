@@ -32,7 +32,7 @@ export const PLACEMENT_CATALOG: PlacementCatalogEntry[] = [
     description: 'Master switch to enable/disable all native ads',
     format: 'master',
     group: 'master',
-    defaultEnabled: true,
+    defaultEnabled: false,
   },
   {
     key: Placement.INTERSTITIAL_TO_JYOTISH,
@@ -40,7 +40,7 @@ export const PLACEMENT_CATALOG: PlacementCatalogEntry[] = [
     description: 'Full-screen interstitial when navigating to Astro tab',
     format: 'interstitial',
     group: 'interstitial',
-    defaultEnabled: true,
+    defaultEnabled: false,
   },
   {
     key: Placement.INTERSTITIAL_TO_HOME,
