@@ -4,4 +4,5 @@
     <string name="title_activity_main">Chandra Darshan</string>
     <string name="package_name">com.sathish.utilites.chandra_darshan</string>
     <string name="custom_url_scheme">com.sathish.utilites.chandra_darshan</string>
+    <string name="admob_app_id">ca-app-pub-7828121987315128~9576768387</string>
 </resources>

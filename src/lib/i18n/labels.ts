@@ -26,6 +26,7 @@ type LabelKey =
   | 'calendarPrefs'
   | 'tabToday'
   | 'tabJyotish'
+  | 'tabSettings'
   | 'jyotishTitle'
   | 'forYouToday'
   | 'birthChart'
@@ -33,6 +34,8 @@ type LabelKey =
   | 'birthDate'
   | 'birthTime'
   | 'timeUnknown'
+  | 'timeNotSpecified'
+  | 'addBirthTime'
   | 'birthPlace'
   | 'saveProfile'
   | 'editBirthDetails'
@@ -80,7 +83,19 @@ type LabelKey =
   | 'dashaTimelineIntro'
   | 'dailyReading'
   | 'favorToday'
-  | 'pauseToday';
+  | 'pauseToday'
+  | 'userName'
+  | 'greeting'
+  | 'greetingPrefix'
+  | 'dailyReminder'
+  | 'dailyReminderDescription'
+  | 'dailyReminderTime'
+  | 'dailyReminderNeedsProfile'
+  | 'dailyReminderPermissionDenied'
+  | 'dailyReminderEnabled'
+  | 'dailyReminderDisabled'
+  | 'dailyReminderNotifTitle'
+  | 'dailyReminderNotifBody';
 
 const LABELS: Record<LabelKey, Record<AppLanguage, string>> = {
   appTitle: {
@@ -252,14 +267,21 @@ const LABELS: Record<LabelKey, Record<AppLanguage, string>> = {
     ta: 'இன்று',
   },
   tabJyotish: {
-    en: 'Jyotish',
+    en: 'Astro',
     hi: 'ज्योतिष',
     sa: 'ज्योतिषम्',
     te: 'జ్యోతిషం',
     ta: 'ஜோதிடம்',
   },
+  tabSettings: {
+    en: 'Settings',
+    hi: 'सेटिंग्स',
+    sa: 'विन्यासाः',
+    te: 'సెట్టింగ్‌లు',
+    ta: 'அமைப்புகள்',
+  },
   jyotishTitle: {
-    en: 'Personal Jyotish',
+    en: 'Astro',
     hi: 'व्यक्तिगत ज्योतिष',
     sa: 'व्यक्तिगतज्योतिषम्',
     te: 'వ్యక్తిగత జ్యోతిషం',
@@ -301,11 +323,25 @@ const LABELS: Record<LabelKey, Record<AppLanguage, string>> = {
     ta: 'பிறந்த நேரம்',
   },
   timeUnknown: {
-    en: "I don't know the exact time",
-    hi: 'सटीक समय नहीं पता',
-    sa: 'समयं न जानामि',
-    te: 'ఖచ్చితమైన సమయం తెలియదు',
-    ta: 'சரியான நேரம் தெரியவில்லை',
+    en: "I don't know my birth time",
+    hi: 'जन्म समय नहीं पता',
+    sa: 'जन्मसमयं न जानामि',
+    te: 'జన్మ సమయం తెలియదు',
+    ta: 'பிறந்த நேரம் தெரியவில்லை',
+  },
+  timeNotSpecified: {
+    en: 'Time not specified',
+    hi: 'समय निर्दिष्ट नहीं',
+    sa: 'समयः निर्दिष्टः न',
+    te: 'సమయం పేర్కొనలేదు',
+    ta: 'நேரம் குறிப்பிடப்படவில்லை',
+  },
+  addBirthTime: {
+    en: 'Add birth time',
+    hi: 'जन्म समय जोड़ें',
+    sa: 'जन्मसमयं योजयतु',
+    te: 'జన్మ సమయం జోడించండి',
+    ta: 'பிறந்த நேரத்தைச் சேர்',
   },
   birthPlace: {
     en: 'Place of birth',
@@ -643,10 +679,98 @@ const LABELS: Record<LabelKey, Record<AppLanguage, string>> = {
     te: 'ఆగండి లేదా నివారించండి',
     ta: 'நிறுத்து அல்லது தவிர்',
   },
+  userName: {
+    en: 'Name (optional)',
+    hi: 'नाम (वैकल्पिक)',
+    sa: 'नाम (वैकल्पिकम्)',
+    te: 'పేరు (ఐచ్ఛికం)',
+    ta: 'பெயர் (விருப்பம்)',
+  },
+  greeting: {
+    en: 'Namaste, {name}',
+    hi: 'नमस्ते, {name}',
+    sa: 'नमस्ते, {name}',
+    te: 'నమస్కారం, {name}',
+    ta: 'வணக்கம், {name}',
+  },
+  greetingPrefix: {
+    en: 'Namaste,',
+    hi: 'नमस्ते,',
+    sa: 'नमस्ते,',
+    te: 'నమస్కారం,',
+    ta: 'வணக்கம்,',
+  },
+  dailyReminder: {
+    en: 'Daily reading reminder',
+    hi: 'दैनिक संदेश अनुस्मारक',
+    sa: 'दैनिकवाचनस्मारकम्',
+    te: 'రోజువారీ సందేశం గుర్తు',
+    ta: 'தினசரி வாசிப்பு நினைவூட்டல்',
+  },
+  dailyReminderDescription: {
+    en: 'Remind me to check today’s personal reading',
+    hi: 'आज का व्यक्तिगत संदेश देखने की याद दिलाएँ',
+    sa: 'अद्यव्यक्तिगतवाचनं पश्यितुं स्मारयतु',
+    te: 'ఈరోజు వ్యక్తిగత సందేశం చూడమని గుర్తు చేయండి',
+    ta: 'இன்றைய தனிப்பட்ட வாசிப்பைப் பார்க்க நினைவூட்டு',
+  },
+  dailyReminderTime: {
+    en: 'Reminder time',
+    hi: 'अनुस्मारक समय',
+    sa: 'स्मारकसमयः',
+    te: 'గుర్తు సమయం',
+    ta: 'நினைவூட்டல் நேரம்',
+  },
+  dailyReminderNeedsProfile: {
+    en: 'Add a birth profile to enable daily reminders.',
+    hi: 'दैनिक अनुस्मारक के लिए जन्म विवरण जोड़ें।',
+    sa: 'दैनिकस्मारकाय जन्मविवरणं योजयतु।',
+    te: 'రోజువారీ గుర్తుల కోసం జన్మ వివరాలు జోడించండి.',
+    ta: 'தினசரி நினைவூட்டல்களுக்கு பிறப்பு விவரங்களைச் சேர்க்கவும்.',
+  },
+  dailyReminderPermissionDenied: {
+    en: 'Notification permission was denied. Enable it in system settings to use reminders.',
+    hi: 'सूचना अनुमति अस्वीकृत। अनुस्मारक के लिए सिस्टम सेटिंग में सक्षम करें।',
+    sa: 'सूचनानुमतिः निराकृता। स्मारकाय प्रणालीसेटिङ्गेषु सक्षमं कुरुत।',
+    te: 'నోటిఫికేషన్ అనుమతి నిరాకరించబడింది. గుర్తుల కోసం సిస్టమ్ సెట్టింగ్‌లలో ప్రారంభించండి.',
+    ta: 'அறிவிப்பு அனுமதி மறுக்கப்பட்டது. நினைவூட்டல்களுக்கு கணினி அமைப்புகளில் இயக்கவும்.',
+  },
+  dailyReminderEnabled: {
+    en: 'Daily reminders enabled.',
+    hi: 'दैनिक अनुस्मारक सक्षम।',
+    sa: 'दैनिकस्मारकं सक्षमम्।',
+    te: 'రోజువారీ గుర్తులు ప్రారంభించబడ్డాయి.',
+    ta: 'தினசரி நினைவூட்டல்கள் இயக்கப்பட்டன.',
+  },
+  dailyReminderDisabled: {
+    en: 'Daily reminders disabled.',
+    hi: 'दैनिक अनुस्मारक अक्षम।',
+    sa: 'दैनिकस्मारकं निष्क्रियम्।',
+    te: 'రోజువారీ గుర్తులు నిలిపివేయబడ్డాయి.',
+    ta: 'தினசரி நினைவூட்டல்கள் முடக்கப்பட்டன.',
+  },
+  dailyReminderNotifTitle: {
+    en: 'Your reading for today',
+    hi: 'आज का संदेश',
+    sa: 'अद्यवाचनम्',
+    te: 'ఈరోజు మీ సందేశం',
+    ta: 'இன்றைய உங்கள் வாசிப்பு',
+  },
+  dailyReminderNotifBody: {
+    en: 'Open Chandra Darshan to see your personal reading for today.',
+    hi: 'आज का व्यक्तिगत संदेश देखने के लिए चन्द्र दर्शन खोलें।',
+    sa: 'अद्यव्यक्तिगतवाचनं द्रष्टुं चन्द्रदर्शनं उद्घाटयतु।',
+    te: 'ఈరోజు వ్యక్తిగత సందేశం చూడటానికి చంద్ర దర్శన్ తెరవండి.',
+    ta: 'இன்றைய தனிப்பட்ட வாசிப்பைப் பார்க்க சந்திர தரிசனத்தைத் திறக்கவும்.',
+  },
 };
 
 export function t(key: LabelKey, language: AppLanguage): string {
   return LABELS[key][language];
+}
+
+export function greeting(name: string, language: AppLanguage): string {
+  return t('greeting', language).replace('{name}', name);
 }
 
 export type { LabelKey };

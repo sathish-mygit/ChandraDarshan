@@ -72,7 +72,7 @@ Env override: `CAPACITOR_PACKAGE_MODE=shared|isolate|auto`
 
 ## Build numbers (per branch)
 
-Each branch maintains its own counter in `buildinfo-{branch}.json` (gitignored). Every `npm run build` increments `versionCode` and writes `src/config/buildinfo-generated.ts` for the UI.
+Each branch maintains its own counter in `buildinfo-{branch}.json` (**committed**). The branch name in the filename lets parallel branches each track a version without fighting over a single shared file on merge. Every `npm run build` increments `versionCode` and writes `src/config/buildinfo-generated.ts` (gitignored) for the UI.
 
 Gradle reads the same file for APK/AAB `versionCode` and `versionName`.
 
@@ -123,9 +123,9 @@ node scripts/resolve-android-package.cjs
 cat android/.package-resolved.json
 ```
 
-## Firebase (Phase 3)
+## Firebase (prod Analytics + Crashlytics)
 
-Flavor source sets and `google-services.json` are not configured yet. See planned `02-firebase.md`. The dev/prod Gradle flavors are ready for when Firebase is added.
+Prod flavor only. See [02-firebase.md](02-firebase.md). Place `google-services.json` at `android/app/src/prod/`. Dev builds stay telemetry-free via `NEXT_PUBLIC_ANALYTICS_ENABLED=false` in `.env.development`.
 
 ## Troubleshooting
 
@@ -135,5 +135,9 @@ Flavor source sets and `google-services.json` are not configured yet. See planne
 | Stale web content in APK | Full `npm run build`, not Studio-only Run |
 | Feature branch overwrote dev app | Expected on `develop`; use isolated branch package or `build:isolated` |
 | `Missing .env.development` | Ensure `.env.development` exists (committed in repo) |
+
+## Branding assets
+
+Launcher icon and splash screen are generated from SVG sources in `assets/`. See [05-branding-assets.md](05-branding-assets.md) for colors, source files, and `npm run assets:generate`.
 
 Agent skill: [`.cursor/skills/android-build-pipeline/SKILL.md`](../../.cursor/skills/android-build-pipeline/SKILL.md)

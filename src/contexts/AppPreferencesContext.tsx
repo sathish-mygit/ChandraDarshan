@@ -10,6 +10,13 @@ import {
   type ReactNode,
 } from 'react';
 import {
+  ANALYTICS_EVENTS,
+  birthProfileSavedParams,
+  logEvent,
+  preferenceChangedParams,
+} from '@/lib/analytics';
+import { syncDailyReadingReminder } from '@/lib/notifications/daily-reminder';
+import {
   DEFAULT_PREFERENCES,
   loadPreferences,
   savePreferences,
@@ -60,6 +67,43 @@ export function AppPreferencesProvider({ children }: { children: ReactNode }) {
         return next;
       });
       await savePreferences(next);
+
+      if (patch.language !== undefined) {
+        logEvent(
+          ANALYTICS_EVENTS.PREFERENCE_CHANGED,
+          preferenceChangedParams('language', patch.language),
+        );
+      }
+      if (patch.masaSystem !== undefined) {
+        logEvent(
+          ANALYTICS_EVENTS.PREFERENCE_CHANGED,
+          preferenceChangedParams('masa_system', patch.masaSystem),
+        );
+      }
+      if (patch.location !== undefined) {
+        logEvent(
+          ANALYTICS_EVENTS.PREFERENCE_CHANGED,
+          preferenceChangedParams('location', patch.location.source),
+        );
+      }
+      if (patch.dailyReminder !== undefined) {
+        const reminder = patch.dailyReminder;
+        const value = reminder?.enabled
+          ? reminder.time
+          : 'off';
+        logEvent(
+          ANALYTICS_EVENTS.PREFERENCE_CHANGED,
+          preferenceChangedParams('daily_reminder', value),
+        );
+      }
+
+      if (
+        patch.dailyReminder !== undefined ||
+        patch.language !== undefined ||
+        patch.birthProfile !== undefined
+      ) {
+        void syncDailyReadingReminder(next);
+      }
     },
     [],
   );
@@ -72,12 +116,22 @@ export function AppPreferencesProvider({ children }: { children: ReactNode }) {
         return next;
       });
       await savePreferences(next);
+
+      if (profile) {
+        logEvent(
+          ANALYTICS_EVENTS.BIRTH_PROFILE_SAVED,
+          birthProfileSavedParams(!profile.timeUnknown && Boolean(profile.birthTime)),
+        );
+      }
+
+      void syncDailyReadingReminder(next);
     },
     [],
   );
 
   const clearBirthProfile = useCallback(async () => {
     await updateBirthProfile(undefined);
+    logEvent(ANALYTICS_EVENTS.BIRTH_PROFILE_CLEARED, {});
   }, [updateBirthProfile]);
 
   const value = useMemo(

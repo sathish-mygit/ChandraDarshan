@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack -p 3002",
+    "dev": "node scripts/ensure-buildinfo.cjs && next dev --turbopack -p 3002",
     "build": "node scripts/resolve-android-package.cjs && node scripts/increment-build.cjs && node scripts/next-build.mjs && npx cap sync android",
     "build:web": "next build",
     "build:mobile": "npm run build",
@@ -17,18 +17,25 @@
     "build:reset-package": "node scripts/set-package-mode.cjs auto",
     "start": "next start",
     "lint": "eslint",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "node scripts/ensure-buildinfo.cjs && tsc --noEmit",
     "cap:sync": "npm run build:web && npx cap sync android",
-    "cap:android": "npm run cap:sync && npx cap open android"
+    "cap:android": "npm run cap:sync && npx cap open android",
+    "assets:generate": "capacitor-assets generate --android --pwa --iconBackgroundColor \"#020617\" --iconBackgroundColorDark \"#020617\" --splashBackgroundColor \"#020617\" --splashBackgroundColorDark \"#020617\" && node scripts/patch-android-adaptive-icon.cjs && node scripts/generate-play-store-assets.cjs"
   },
   "dependencies": {
+    "@capacitor-community/admob": "^5.0.0",
+    "@capacitor-firebase/analytics": "^8.3.0",
+    "@capacitor-firebase/crashlytics": "^8.3.0",
     "@capacitor/android": "^8.0.1",
+    "@capacitor/app": "^7.1.2",
     "@capacitor/core": "^8.0.1",
     "@capacitor/geolocation": "^7.0.0",
+    "@capacitor/local-notifications": "^8.2.1",
     "@capacitor/preferences": "^7.0.0",
     "@capacitor/share": "^8.0.1",
     "@capacitor/splash-screen": "^7.0.0",
     "clsx": "^2.1.1",
+    "firebase": "^12.16.0",
     "lucide-react": "^0.475.0",
     "next": "16.2.10",
     "panchang-ts": "^4.3.1",
@@ -37,6 +44,7 @@
     "tailwind-merge": "^3.0.1"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "^8.0.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",

@@ -75,6 +75,17 @@ cap sync android
 
 Full APK pipeline (`npm run build:android:dev`) adds Gradle `assembleDevDebug` or `assembleProdRelease` after sync.
 
+### Per-branch build metadata (committed)
+
+| File | In git? | Role |
+|------|---------|------|
+| `buildinfo-{branch}.json` | **Yes — commit after build** | Source of truth for `versionCode`, `versionName`, `buildNumber` on this branch |
+| `src/config/buildinfo-generated.ts` | No (gitignored) | UI-facing snapshot regenerated each build from the JSON |
+
+**Why branch in the filename:** so each branch commits its own counter (`buildinfo-develop.json`, `buildinfo-feature-foo.json`, …) instead of one shared `buildinfo.json` that would conflict on every merge. Do **not** gitignore `buildinfo-*.json`. Do **not** rename to a single file.
+
+Gradle and `next.config.ts` read `buildinfo-{currentBranch}.json` via the same branch name from git.
+
 ---
 
 ## Naming conventions
@@ -149,16 +160,22 @@ npm run build
 
 ---
 
-## Phase 3 placeholder: Firebase
+## Firebase (prod Analytics + Crashlytics)
 
-Not yet configured. When added:
+Configured for **prod flavor only**. See [docs/03-setup/02-firebase.md](../../docs/03-setup/02-firebase.md).
 
-- `android/app/src/dev/google-services.json` — staging
-- `android/app/src/prod/google-services.json` — production
-- `NEXT_PUBLIC_FIREBASE_*` in `.env.development` / `.env.production`
-- Gradle `server_client_id` resValues per flavor
+| Item | Location |
+|------|----------|
+| `google-services.json` | `android/app/src/prod/` (gitignored; you add after Console setup) |
+| Web Firebase keys | `.env.production` or `.env.local` |
+| Enable flag | `NEXT_PUBLIC_ANALYTICS_ENABLED=true` in prod env only |
+| Dev flavor | No Firebase file; telemetry suppressed in JS |
 
-Until then, flavors and env wiring are in place; no `google-services` plugin is applied.
+Gradle applies `google-services` and Crashlytics plugins when `android/app/src/prod/google-services.json` exists, but **disables** `process*GoogleServices` for the **dev** flavor so devDebug/devRelease builds do not require a dev `google-services.json`.
+
+`capacitor.config.ts` sets `FirebaseAnalytics.enabled` from `NEXT_PUBLIC_ANALYTICS_ENABLED` at build time.
+
+Not in scope: Auth, App Check, Remote Config, dev/staging Firebase project.
 
 ---
 
@@ -171,6 +188,19 @@ Until then, flavors and env wiring are in place; no `google-services` plugin is 
 | `scripts/apply-build-env.cjs` | Loads env before `next build` |
 | `scripts/next-build.mjs` | Env + `next build` |
 | `scripts/build-android.mjs` | Full web + sync + Gradle APK |
-| `scripts/increment-build.cjs` | Per-branch version increment |
+| `scripts/increment-build.cjs` | Per-branch version increment; updates committed `buildinfo-{branch}.json` |
+| `buildinfo-{branch}.json` | Committed per-branch version counter (not gitignored) |
 | `capacitor.config.ts` | `appId` / `appName` from manifest |
 | `android/app/build.gradle` | Flavors, versions, artifact naming |
+
+---
+
+## Branding assets
+
+Source artwork lives in `assets/` (`icon-only.svg`, `icon-background.svg`, `icon-foreground.svg`, `splash.svg`). Regenerate Android mipmaps and splash drawables with:
+
+```bash
+npm run assets:generate
+```
+
+Do **not** hand-edit `android/app/src/main/res/mipmap-*` or splash PNGs under `drawable-*` — they are overwritten on generate. Moon shape for adaptive icons: `drawable/ic_launcher_moon.xml` (rewritten by `patch-android-adaptive-icon.cjs`; edit the script’s `MOON_VECTOR_XML` or the file directly). Web favicon: `src/app/icon.svg`.

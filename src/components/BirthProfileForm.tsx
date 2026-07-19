@@ -27,7 +27,7 @@ export function BirthProfileForm({
     initial?.birthDate ?? '1990-01-01',
   );
   const [birthTime, setBirthTime] = useState(initial?.birthTime ?? '12:00');
-  const [timeUnknown, setTimeUnknown] = useState(initial?.timeUnknown ?? true);
+  const [timeUnknown, setTimeUnknown] = useState(initial?.timeUnknown ?? false);
   const [birthLocation, setBirthLocation] =
     useState<StoredLocation>(defaultLocation);
 
@@ -45,7 +45,9 @@ export function BirthProfileForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="text-sm text-slate-400">Name (optional)</label>
+        <label className="text-sm text-slate-400">
+          {t('userName', language)}
+        </label>
         <input
           type="text"
           value={name}
@@ -68,31 +70,42 @@ export function BirthProfileForm({
       </div>
 
       <div>
-        <label className="flex items-center gap-2 text-sm text-slate-300">
-          <input
-            type="checkbox"
-            checked={timeUnknown}
-            onChange={(event) => setTimeUnknown(event.target.checked)}
-            className="rounded border-slate-600"
-          />
-          {t('timeUnknown', language)}
+        <label className="text-sm text-slate-400">
+          {t('birthTime', language)}
         </label>
-      </div>
 
-      {!timeUnknown ? (
-        <div>
-          <label className="text-sm text-slate-400">
-            {t('birthTime', language)}
-          </label>
-          <input
-            type="time"
-            required
-            value={birthTime}
-            onChange={(event) => setBirthTime(event.target.value)}
-            className="mt-1 w-full rounded-xl border border-slate-700 bg-slate-900/60 px-3 py-2.5 text-sm text-amber-50 outline-none focus:border-amber-400/60"
-          />
-        </div>
-      ) : null}
+        {timeUnknown ? (
+          <div className="mt-1 flex items-center justify-between gap-3 rounded-xl border border-dashed border-slate-700 bg-slate-900/40 px-3 py-2.5">
+            <span className="text-sm text-slate-400">
+              {t('timeNotSpecified', language)}
+            </span>
+            <button
+              type="button"
+              onClick={() => setTimeUnknown(false)}
+              className="shrink-0 text-sm text-amber-400 hover:text-amber-300"
+            >
+              {t('addBirthTime', language)}
+            </button>
+          </div>
+        ) : (
+          <>
+            <input
+              type="time"
+              required
+              value={birthTime}
+              onChange={(event) => setBirthTime(event.target.value)}
+              className="mt-1 w-full rounded-xl border border-slate-700 bg-slate-900/60 px-3 py-2.5 text-sm text-amber-50 outline-none focus:border-amber-400/60"
+            />
+            <button
+              type="button"
+              onClick={() => setTimeUnknown(true)}
+              className="mt-2 text-xs text-slate-500 transition hover:text-amber-400"
+            >
+              {t('timeUnknown', language)}
+            </button>
+          </>
+        )}
+      </div>
 
       <div>
         <label className="text-sm text-slate-400">

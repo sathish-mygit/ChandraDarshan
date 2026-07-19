@@ -51,9 +51,23 @@ export function JyotishClient() {
     <main className="px-4 py-6">
       <div className="mx-auto w-full max-w-md space-y-6">
         <div>
-          <h2 className="text-xl font-semibold text-amber-50">
-            {t('jyotishTitle', language)}
-          </h2>
+          {birthProfile?.name ? (
+            <>
+              <p className="text-sm text-slate-500">
+                {t('jyotishTitle', language)}
+              </p>
+              <p className="mt-1 text-sm text-slate-400">
+                {t('greetingPrefix', language)}
+              </p>
+              <h1 className="mt-0.5 text-3xl font-semibold text-amber-50">
+                {birthProfile.name}
+              </h1>
+            </>
+          ) : (
+            <h2 className="text-xl font-medium text-slate-400">
+              {t('jyotishTitle', language)}
+            </h2>
+          )}
           <p className="mt-1 text-xs text-slate-500">
             {t('disclaimer', language)}
           </p>

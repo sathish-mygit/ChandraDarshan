@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2732" height="2732" viewBox="0 0 2732 2732">
+  <rect width="2732" height="2732" fill="#020617"/>
+  <defs>
+    <mask id="splashMoonLit">
+      <rect width="2732" height="2732" fill="black"/>
+      <circle cx="1366" cy="1366" r="490" fill="white"/>
+      <circle cx="1814" cy="1366" r="490" fill="black"/>
+    </mask>
+    <radialGradient id="splashMoonShade" cx="62%" cy="38%" r="62%">
+      <stop offset="0%" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.2"/>
+    </radialGradient>
+  </defs>
+  <circle cx="1366" cy="1366" r="700" fill="#f59e0b" fill-opacity="0.12"/>
+  <circle cx="1366" cy="1366" r="612" fill="none" stroke="#f59e0b" stroke-opacity="0.22" stroke-width="10"/>
+  <circle cx="1366" cy="1366" r="490" fill="#fef3c7" mask="url(#splashMoonLit)"/>
+  <circle cx="1366" cy="1366" r="490" fill="url(#splashMoonShade)" mask="url(#splashMoonLit)"/>
+</svg>

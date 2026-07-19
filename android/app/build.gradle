@@ -194,10 +194,23 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     implementation project(':capacitor-cordova-android-plugins')
+    implementation platform('com.google.firebase:firebase-bom:33.7.0')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.ads.mediation:facebook:6.18.0.0'
 }
 
 apply from: 'capacitor.build.gradle'
 
+def hasGoogleServices = file('src/prod/google-services.json').exists()
+if (hasGoogleServices) {
+    apply plugin: 'com.google.gms.google-services'
+    apply plugin: 'com.google.firebase.crashlytics'
+} else {
+    logger.info('google-services.json not found in android/app/src/prod/, Firebase plugins not applied')
+}
+
+// google-services only for prod flavor (dev app not registered in Firebase; same pattern as WardrobeWise)
 task readBuildInfo {
     doLast {
         def buildInfoFilePath = new File(rootDir.parentFile, "buildinfo-${currentBranch}.json")
@@ -256,6 +269,19 @@ afterEvaluate {
             def finalFile = new File(dir, "${resolveNextAabBaseName(dir, base)}.aab")
             bundleTask.finalBundleFile.set(finalFile)
             println "[AAB] Release bundle will be named: ${finalFile.name}"
+        }
+    }
+
+    if (hasGoogleServices) {
+        android.applicationVariants.configureEach { variant ->
+            if (variant.flavorName != 'dev') {
+                return
+            }
+            def capName = variant.name.substring(0, 1).toUpperCase() + variant.name.substring(1)
+            tasks.matching { it.name == "process${capName}GoogleServices" }.configureEach {
+                enabled = false
+                println "[Firebase] Skipping google-services for ${variant.name} (dev flavor not registered in Firebase)"
+            }
         }
     }
 }
