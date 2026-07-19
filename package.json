@@ -23,9 +23,11 @@
     "assets:generate": "capacitor-assets generate --android --pwa --iconBackgroundColor \"#020617\" --iconBackgroundColorDark \"#020617\" --splashBackgroundColor \"#020617\" --splashBackgroundColorDark \"#020617\" && node scripts/patch-android-adaptive-icon.cjs"
   },
   "dependencies": {
+    "@capacitor-community/admob": "^5.0.0",
     "@capacitor-firebase/analytics": "^8.3.0",
     "@capacitor-firebase/crashlytics": "^8.3.0",
     "@capacitor/android": "^8.0.1",
+    "@capacitor/app": "^7.1.2",
     "@capacitor/core": "^8.0.1",
     "@capacitor/geolocation": "^7.0.0",
     "@capacitor/preferences": "^7.0.0",

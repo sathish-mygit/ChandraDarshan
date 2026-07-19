@@ -8,8 +8,9 @@ Production telemetry for Chandra Darshan: **Firebase Analytics** (page views, cu
 |----------|----------------|
 | Prod Firebase project + `google-services.json` | Dev/staging Firebase project |
 | Page / screen tracking | Firebase Auth |
-| Custom preference and Jyotish events | App Check, Remote Config |
-| Crashlytics on native Android | AdMob |
+| Custom preference and Jyotish events | App Check |
+| Page visit events (`home_page_visited`, `astro_page_visited`, `settings_page_visited`) | |
+| Crashlytics on native Android | |
 
 ## Prerequisites
 
@@ -90,6 +91,11 @@ Dev branch builds load `.env.development` and never send events.
 | `birth_profile_saved` | Birth profile saved | `has_birth_time` |
 | `birth_profile_cleared` | Birth profile removed | — |
 | `glossary_opened` | Glossary tooltip opened | `term_id` |
+| `home_page_visited` | User navigates to Today / home | `route_path` |
+| `astro_page_visited` | User navigates to Astro tab (`/jyotish/`) | `route_path` |
+| `settings_page_visited` | User navigates to Settings | `route_path` |
+
+`screen_view` uses `route_segment: astro` for the Astro tab (URL remains `/jyotish/`).
 
 User properties (segmentation): `app_language`, `masa_system`, `has_birth_profile`, `location_source`, `platform`.
 
@@ -121,7 +127,9 @@ adb shell setprop debug.firebase.analytics.app com.sathish.utilites.chandra_dars
 
 Open the app, navigate **Today → Jyotish → Settings**. Check **Firebase Console → Analytics → DebugView** for `screen_view` and `preference_changed`.
 
-Crashlytics: trigger a test non-fatal in dev tools or wait for a real error; reports appear in Console within ~15 minutes.
+Crashlytics: open **Settings** on a prod debug APK with analytics enabled. Tap **Test fatal crash** once to enable Crashlytics in Console (app will close). Use **Test non-fatal error** to verify reporting without killing the app. Reports appear within ~15 minutes.
+
+**Note:** Set `NEXT_PUBLIC_ANALYTICS_ENABLED=true` in `.env.production` (or your prod debug env) before building so Crashlytics initializes.
 
 ### Typecheck / lint
 
@@ -138,6 +146,7 @@ npm run lint
 | `src/lib/firebase/client.ts` | Minimal Firebase init for web Analytics |
 | `src/lib/analytics/analytics.service.ts` | Native + web event bridge |
 | `src/lib/analytics/crashlytics.service.ts` | Native Crashlytics + web exception events |
+| `src/components/CrashlyticsTestPanel.tsx` | Settings buttons for fatal / non-fatal Crashlytics tests |
 | `src/components/AnalyticsTracker.tsx` | Route tracking |
 | `src/components/AppTelemetry.tsx` | Build metadata, user properties, global errors |
 | `capacitor.config.ts` | `FirebaseAnalytics.enabled` at build time |

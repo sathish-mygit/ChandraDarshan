@@ -5,6 +5,8 @@ import { AnalyticsTracker } from '@/components/AnalyticsTracker';
 import { AppHeader } from '@/components/AppHeader';
 import { AppTelemetry } from '@/components/AppTelemetry';
 import { BottomNav } from '@/components/BottomNav';
+import { AppLifecycleManager } from '@/components/AppLifecycleManager';
+import { AdNavigationBridge } from '@/components/AdNavigationBridge';
 
 export default function AppContent({
   children,
@@ -15,6 +17,8 @@ export default function AppContent({
     <AppPreferencesProvider>
       <AnalyticsTracker />
       <AppTelemetry />
+      <AppLifecycleManager />
+      <AdNavigationBridge />
       <div className="relative flex min-h-screen flex-col bg-background text-foreground">
         <AppHeader />
         <div

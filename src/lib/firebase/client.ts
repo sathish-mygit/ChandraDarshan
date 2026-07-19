@@ -6,6 +6,10 @@ import {
   isSupported as isAnalyticsSupported,
   type Analytics,
 } from 'firebase/analytics';
+import {
+  getRemoteConfig as getFirebaseRemoteConfig,
+  type RemoteConfig,
+} from 'firebase/remote-config';
 import { isAnalyticsEnabled } from '@/config/analytics';
 
 const firebaseConfig = {
@@ -20,6 +24,7 @@ const firebaseConfig = {
 
 let app: FirebaseApp | undefined;
 let analytics: Analytics | undefined;
+let remoteConfig: RemoteConfig | undefined;
 
 export function getFirebaseApp(): FirebaseApp | null {
   if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
@@ -63,4 +68,18 @@ export async function getFirebaseAnalytics(): Promise<Analytics | null> {
   }
 
   return null;
+}
+
+export function getRemoteConfig(): RemoteConfig | null {
+  const firebaseApp = getFirebaseApp();
+  if (!firebaseApp) {
+    return null;
+  }
+
+  if (!remoteConfig) {
+    remoteConfig = getFirebaseRemoteConfig(firebaseApp);
+    remoteConfig.settings.minimumFetchIntervalMillis = 60_000;
+  }
+
+  return remoteConfig;
 }

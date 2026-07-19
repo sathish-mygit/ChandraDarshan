@@ -258,7 +258,7 @@ const LABELS: Record<LabelKey, Record<AppLanguage, string>> = {
     ta: 'இன்று',
   },
   tabJyotish: {
-    en: 'Jyotish',
+    en: 'Astro',
     hi: 'ज्योतिष',
     sa: 'ज्योतिषम्',
     te: 'జ్యోతిషం',
@@ -272,7 +272,7 @@ const LABELS: Record<LabelKey, Record<AppLanguage, string>> = {
     ta: 'அமைப்புகள்',
   },
   jyotishTitle: {
-    en: 'Personal Jyotish',
+    en: 'Astro',
     hi: 'व्यक्तिगत ज्योतिष',
     sa: 'व्यक्तिगतज्योतिषम्',
     te: 'వ్యక్తిగత జ్యోతిషం',

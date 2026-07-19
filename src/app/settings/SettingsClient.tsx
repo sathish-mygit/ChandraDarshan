@@ -5,6 +5,8 @@ import { CityPicker } from '@/components/CityPicker';
 import { GpsLocationButton } from '@/components/GpsLocationButton';
 import { LanguagePicker } from '@/components/LanguagePicker';
 import { MasaSystemPicker } from '@/components/MasaSystemPicker';
+import { AdDiagnosticsPanel } from '@/components/AdDiagnosticsPanel';
+import { CrashlyticsTestPanel } from '@/components/CrashlyticsTestPanel';
 import { useAppPreferences } from '@/contexts/AppPreferencesContext';
 import { t } from '@/lib/i18n/labels';
 
@@ -100,6 +102,9 @@ export function SettingsClient() {
             </div>
           </div>
         </section>
+
+        <CrashlyticsTestPanel />
+        <AdDiagnosticsPanel />
       </div>
     </main>
   );

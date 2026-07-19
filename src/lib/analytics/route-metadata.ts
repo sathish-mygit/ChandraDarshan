@@ -7,7 +7,11 @@ export function getPageTitle(pathname: string): string {
 export function getRouteSegment(pathname: string): string {
   const cleanPath = pathname.replace(/^\/|\/$/g, '').split('?')[0];
   const segments = cleanPath.split('/').filter(Boolean);
-  return segments[0] || '';
+  const first = segments[0] || '';
+  if (first === 'jyotish') {
+    return 'astro';
+  }
+  return first;
 }
 
 export function getRouteMetadata(pathname: string) {

@@ -72,6 +72,37 @@ class CrashlyticsService {
     }
   }
 
+  /** Forces a fatal native crash to verify Crashlytics in Firebase Console. */
+  testCrash(): void {
+    if (this.isDisabled()) {
+      console.warn('[CrashlyticsService] Cannot test crash: analytics disabled.');
+      return;
+    }
+
+    if (!this.isInitialized) {
+      console.warn('[CrashlyticsService] Cannot test crash: not initialized yet.');
+      return;
+    }
+
+    if (Capacitor.isNativePlatform()) {
+      console.log('[CrashlyticsService] Forcing native test crash.');
+      void FirebaseCrashlytics.crash({
+        message: 'Chandra Darshan Crashlytics test crash',
+      });
+      return;
+    }
+
+    throw new Error('Chandra Darshan Crashlytics test error (web)');
+  }
+
+  /** Records a non-fatal error without killing the app. */
+  async testNonFatalError(): Promise<void> {
+    await this.recordError({
+      error: new Error('Chandra Darshan Crashlytics non-fatal test'),
+      isFatal: false,
+    });
+  }
+
   async setCustomKey(key: string, value: string | number | boolean): Promise<void> {
     if (this.isDisabled() || !this.isInitialized) {
       return;

@@ -4,6 +4,9 @@ export const ANALYTICS_EVENTS = {
   BIRTH_PROFILE_CLEARED: 'birth_profile_cleared',
   GLOSSARY_OPENED: 'glossary_opened',
   PAGE_DURATION: 'page_duration',
+  HOME_PAGE_VISITED: 'home_page_visited',
+  ASTRO_PAGE_VISITED: 'astro_page_visited',
+  SETTINGS_PAGE_VISITED: 'settings_page_visited',
 } as const;
 
 export type PreferenceSetting = 'language' | 'masa_system' | 'location';

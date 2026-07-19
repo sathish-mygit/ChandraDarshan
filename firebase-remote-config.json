@@ -1,0 +1,117 @@
+{
+  "parameters": {
+    "ads_master": {
+      "defaultValue": { "value": "true" },
+      "description": "Global master switch - disables all native ads if false",
+      "valueType": "BOOLEAN"
+    },
+    "interstitial_toJyotish": {
+      "defaultValue": { "value": "true" },
+      "description": "Show interstitial when navigating to Astro tab",
+      "valueType": "BOOLEAN"
+    },
+    "interstitial_toHome": {
+      "defaultValue": { "value": "false" },
+      "description": "Home fallback interstitial when Astro not visited this session",
+      "valueType": "BOOLEAN"
+    },
+    "interstitial_toSettings": {
+      "defaultValue": { "value": "false" },
+      "description": "Settings fallback interstitial when Astro not visited this session",
+      "valueType": "BOOLEAN"
+    },
+    "ads_fallback_when_no_jyotish": {
+      "defaultValue": { "value": "false" },
+      "description": "Enable Home/Settings fallback placements when Astro tab not visited",
+      "valueType": "BOOLEAN"
+    },
+    "ads_fallback_home": {
+      "defaultValue": { "value": "false" },
+      "description": "Allow Home route in fallback mode",
+      "valueType": "BOOLEAN"
+    },
+    "ads_fallback_settings": {
+      "defaultValue": { "value": "false" },
+      "description": "Allow Settings route in fallback mode",
+      "valueType": "BOOLEAN"
+    },
+    "interstitial_minIntervalMs": {
+      "defaultValue": { "value": "300000" },
+      "description": "Minimum milliseconds between interstitial ads",
+      "valueType": "STRING"
+    },
+    "interstitial_maxPerSession": {
+      "defaultValue": { "value": "2" },
+      "description": "Maximum interstitial ads per session",
+      "valueType": "STRING"
+    },
+    "engagement_minAppSessions": {
+      "defaultValue": { "value": "2" },
+      "description": "Min app sessions before ads unlock",
+      "valueType": "STRING"
+    },
+    "ads_disable_engagement_gates": {
+      "defaultValue": { "value": "false" },
+      "description": "Skip engagement gates (testing only)",
+      "valueType": "BOOLEAN"
+    },
+    "ivt_navigationDelayMs": {
+      "defaultValue": { "value": "800" },
+      "description": "Delay before navigation interstitial after route change",
+      "valueType": "STRING"
+    },
+    "ivt_enabled": {
+      "defaultValue": { "value": "true" },
+      "description": "Master switch for IVT click limiter",
+      "valueType": "BOOLEAN"
+    },
+    "ivt_maxClicksPerSession": {
+      "defaultValue": { "value": "1" },
+      "description": "Max ad clicks per session before pausing ads",
+      "valueType": "STRING"
+    },
+    "ivt_maxClicksPerDay": {
+      "defaultValue": { "value": "3" },
+      "description": "Max ad clicks per day before pausing ads",
+      "valueType": "STRING"
+    },
+    "ivt_pauseDurationMs": {
+      "defaultValue": { "value": "86400000" },
+      "description": "Ms to hide ads after click limit exceeded",
+      "valueType": "STRING"
+    },
+    "freqCap_interstitial_toJyotish_perHour": {
+      "defaultValue": { "value": "1" },
+      "description": "Astro nav interstitial max per hour",
+      "valueType": "STRING"
+    },
+    "freqCap_interstitial_toJyotish_perDay": {
+      "defaultValue": { "value": "3" },
+      "description": "Astro nav interstitial max per day",
+      "valueType": "STRING"
+    },
+    "freqCap_interstitial_toHome_perDay": {
+      "defaultValue": { "value": "2" },
+      "description": "Home fallback interstitial max per day",
+      "valueType": "STRING"
+    },
+    "freqCap_interstitial_toSettings_perDay": {
+      "defaultValue": { "value": "2" },
+      "description": "Settings fallback interstitial max per day",
+      "valueType": "STRING"
+    },
+    "adUnitId_interstitial": {
+      "defaultValue": { "value": "ca-app-pub-7828121987315128/5637523373" },
+      "description": "AdMob interstitial unit ID override",
+      "valueType": "STRING"
+    },
+    "mediationProvider": {
+      "defaultValue": { "value": "admob" },
+      "description": "Active mediation SDK",
+      "valueType": "STRING"
+    }
+  },
+  "version": {
+    "versionNumber": "1"
+  }
+}

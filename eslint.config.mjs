@@ -14,6 +14,8 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     "android/**",
     "scripts/**",
+    "src/lib/ads/**/*.test.ts",
+    "src/lib/ads/test-helpers.ts",
   ]),
 ]);
 
