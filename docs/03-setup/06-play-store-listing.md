@@ -108,6 +108,8 @@ Phrases woven into the listing for Play Store search (avoid repeating the same t
 3. Frame Jyotish as **educational guidance**, not fear-based predictions (Google Play astrology policy).
 4. **~106 characters** of headroom remain in the full description for a support email or privacy line if needed.
 5. Pair with screenshots and feature graphic — see [branding assets](05-branding-assets.md).
+6. **High-res icon** — upload [`play-store/icon-512.png`](../../play-store/icon-512.png) (512×512 PNG). Regenerate with `npm run assets:generate` after editing `assets/icon-only.svg`.
+7. **Feature graphic** — upload [`play-store/feature-graphic.png`](../../play-store/feature-graphic.png) (1024×500 PNG). Regenerate after editing `assets/feature-graphic.svg`.
 
 ## Related
 
