@@ -171,7 +171,7 @@ Configured for **prod flavor only**. See [docs/03-setup/02-firebase.md](../../do
 | Enable flag | `NEXT_PUBLIC_ANALYTICS_ENABLED=true` in prod env only |
 | Dev flavor | No Firebase file; telemetry suppressed in JS |
 
-Gradle applies `google-services` and Crashlytics plugins only when `android/app/src/prod/google-services.json` exists.
+Gradle applies `google-services` and Crashlytics plugins when `android/app/src/prod/google-services.json` exists, but **disables** `process*GoogleServices` for the **dev** flavor so devDebug/devRelease builds do not require a dev `google-services.json`.
 
 `capacitor.config.ts` sets `FirebaseAnalytics.enabled` from `NEXT_PUBLIC_ANALYTICS_ENABLED` at build time.
 

@@ -40,6 +40,8 @@ Production telemetry for Chandra Darshan: **Firebase Analytics** (page views, cu
 
    Until this file exists, Android builds still succeed — Firebase Gradle plugins are skipped.
 
+   When the prod file exists, **dev** flavor builds still work: Gradle skips `processDev*GoogleServices` (dev is not registered in Firebase).
+
 ## 2. Web / JS Firebase config
 
 Copy the Firebase **web app** config into `.env.production` (or `.env.local` for machine-only overrides):
@@ -157,7 +159,7 @@ npm run lint
 | Symptom | Fix |
 |---------|-----|
 | No events in DebugView | Confirm `NEXT_PUBLIC_ANALYTICS_ENABLED=true` in prod env; full `npm run build`, not Studio-only Run |
-| Gradle fails on google-services | Package in json must match `com.sathish.utilites.chandra_darshan` |
+| Gradle fails on google-services | Package in json must match `com.sathish.utilites.chandra_darshan`; dev flavor should skip processing automatically — rebuild after pulling latest `android/app/build.gradle` |
 | Crashlytics empty | Enable Crashlytics in Console; use prod flavor with `google-services.json` |
 | Events in dev APK | Expected if flag is true — use dev env with `ANALYTICS_ENABLED=false` |
 
