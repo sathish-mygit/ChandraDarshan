@@ -12,11 +12,17 @@ export type StoredLocation = {
   timezone: number | string;
 };
 
+export type DailyReminderPreferences = {
+  enabled: boolean;
+  time: string;
+};
+
 export type AppPreferences = {
   language: AppLanguage;
   masaSystem: MasaSystem;
   location: StoredLocation;
   birthProfile?: BirthProfile;
+  dailyReminder?: DailyReminderPreferences;
 };
 
 export type BirthProfile = {

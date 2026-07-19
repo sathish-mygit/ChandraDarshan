@@ -18,6 +18,7 @@ function parsePreferences(value: string): AppPreferences {
     masaSystem: parsed.masaSystem ?? DEFAULT_PREFERENCES.masaSystem,
     location: parsed.location ?? DEFAULT_PREFERENCES.location,
     birthProfile: parsed.birthProfile,
+    dailyReminder: parsed.dailyReminder,
   };
 }
 

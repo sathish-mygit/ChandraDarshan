@@ -15,6 +15,7 @@ import {
   logEvent,
   preferenceChangedParams,
 } from '@/lib/analytics';
+import { syncDailyReadingReminder } from '@/lib/notifications/daily-reminder';
 import {
   DEFAULT_PREFERENCES,
   loadPreferences,
@@ -85,6 +86,24 @@ export function AppPreferencesProvider({ children }: { children: ReactNode }) {
           preferenceChangedParams('location', patch.location.source),
         );
       }
+      if (patch.dailyReminder !== undefined) {
+        const reminder = patch.dailyReminder;
+        const value = reminder?.enabled
+          ? reminder.time
+          : 'off';
+        logEvent(
+          ANALYTICS_EVENTS.PREFERENCE_CHANGED,
+          preferenceChangedParams('daily_reminder', value),
+        );
+      }
+
+      if (
+        patch.dailyReminder !== undefined ||
+        patch.language !== undefined ||
+        patch.birthProfile !== undefined
+      ) {
+        void syncDailyReadingReminder(next);
+      }
     },
     [],
   );
@@ -104,6 +123,8 @@ export function AppPreferencesProvider({ children }: { children: ReactNode }) {
           birthProfileSavedParams(!profile.timeUnknown && Boolean(profile.birthTime)),
         );
       }
+
+      void syncDailyReadingReminder(next);
     },
     [],
   );

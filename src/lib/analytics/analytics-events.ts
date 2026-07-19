@@ -9,7 +9,11 @@ export const ANALYTICS_EVENTS = {
   SETTINGS_PAGE_VISITED: 'settings_page_visited',
 } as const;
 
-export type PreferenceSetting = 'language' | 'masa_system' | 'location';
+export type PreferenceSetting =
+  | 'language'
+  | 'masa_system'
+  | 'location'
+  | 'daily_reminder';
 
 export function preferenceChangedParams(
   setting: PreferenceSetting,

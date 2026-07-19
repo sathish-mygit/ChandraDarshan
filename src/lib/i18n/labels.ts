@@ -86,7 +86,16 @@ type LabelKey =
   | 'pauseToday'
   | 'userName'
   | 'greeting'
-  | 'greetingPrefix';
+  | 'greetingPrefix'
+  | 'dailyReminder'
+  | 'dailyReminderDescription'
+  | 'dailyReminderTime'
+  | 'dailyReminderNeedsProfile'
+  | 'dailyReminderPermissionDenied'
+  | 'dailyReminderEnabled'
+  | 'dailyReminderDisabled'
+  | 'dailyReminderNotifTitle'
+  | 'dailyReminderNotifBody';
 
 const LABELS: Record<LabelKey, Record<AppLanguage, string>> = {
   appTitle: {
@@ -690,6 +699,69 @@ const LABELS: Record<LabelKey, Record<AppLanguage, string>> = {
     sa: 'नमस्ते,',
     te: 'నమస్కారం,',
     ta: 'வணக்கம்,',
+  },
+  dailyReminder: {
+    en: 'Daily reading reminder',
+    hi: 'दैनिक संदेश अनुस्मारक',
+    sa: 'दैनिकवाचनस्मारकम्',
+    te: 'రోజువారీ సందేశం గుర్తు',
+    ta: 'தினசரி வாசிப்பு நினைவூட்டல்',
+  },
+  dailyReminderDescription: {
+    en: 'Remind me to check today’s personal reading',
+    hi: 'आज का व्यक्तिगत संदेश देखने की याद दिलाएँ',
+    sa: 'अद्यव्यक्तिगतवाचनं पश्यितुं स्मारयतु',
+    te: 'ఈరోజు వ్యక్తిగత సందేశం చూడమని గుర్తు చేయండి',
+    ta: 'இன்றைய தனிப்பட்ட வாசிப்பைப் பார்க்க நினைவூட்டு',
+  },
+  dailyReminderTime: {
+    en: 'Reminder time',
+    hi: 'अनुस्मारक समय',
+    sa: 'स्मारकसमयः',
+    te: 'గుర్తు సమయం',
+    ta: 'நினைவூட்டல் நேரம்',
+  },
+  dailyReminderNeedsProfile: {
+    en: 'Add a birth profile to enable daily reminders.',
+    hi: 'दैनिक अनुस्मारक के लिए जन्म विवरण जोड़ें।',
+    sa: 'दैनिकस्मारकाय जन्मविवरणं योजयतु।',
+    te: 'రోజువారీ గుర్తుల కోసం జన్మ వివరాలు జోడించండి.',
+    ta: 'தினசரி நினைவூட்டல்களுக்கு பிறப்பு விவரங்களைச் சேர்க்கவும்.',
+  },
+  dailyReminderPermissionDenied: {
+    en: 'Notification permission was denied. Enable it in system settings to use reminders.',
+    hi: 'सूचना अनुमति अस्वीकृत। अनुस्मारक के लिए सिस्टम सेटिंग में सक्षम करें।',
+    sa: 'सूचनानुमतिः निराकृता। स्मारकाय प्रणालीसेटिङ्गेषु सक्षमं कुरुत।',
+    te: 'నోటిఫికేషన్ అనుమతి నిరాకరించబడింది. గుర్తుల కోసం సిస్టమ్ సెట్టింగ్‌లలో ప్రారంభించండి.',
+    ta: 'அறிவிப்பு அனுமதி மறுக்கப்பட்டது. நினைவூட்டல்களுக்கு கணினி அமைப்புகளில் இயக்கவும்.',
+  },
+  dailyReminderEnabled: {
+    en: 'Daily reminders enabled.',
+    hi: 'दैनिक अनुस्मारक सक्षम।',
+    sa: 'दैनिकस्मारकं सक्षमम्।',
+    te: 'రోజువారీ గుర్తులు ప్రారంభించబడ్డాయి.',
+    ta: 'தினசரி நினைவூட்டல்கள் இயக்கப்பட்டன.',
+  },
+  dailyReminderDisabled: {
+    en: 'Daily reminders disabled.',
+    hi: 'दैनिक अनुस्मारक अक्षम।',
+    sa: 'दैनिकस्मारकं निष्क्रियम्।',
+    te: 'రోజువారీ గుర్తులు నిలిపివేయబడ్డాయి.',
+    ta: 'தினசரி நினைவூட்டல்கள் முடக்கப்பட்டன.',
+  },
+  dailyReminderNotifTitle: {
+    en: 'Your reading for today',
+    hi: 'आज का संदेश',
+    sa: 'अद्यवाचनम्',
+    te: 'ఈరోజు మీ సందేశం',
+    ta: 'இன்றைய உங்கள் வாசிப்பு',
+  },
+  dailyReminderNotifBody: {
+    en: 'Open Chandra Darshan to see your personal reading for today.',
+    hi: 'आज का व्यक्तिगत संदेश देखने के लिए चन्द्र दर्शन खोलें।',
+    sa: 'अद्यव्यक्तिगतवाचनं द्रष्टुं चन्द्रदर्शनं उद्घाटयतु।',
+    te: 'ఈరోజు వ్యక్తిగత సందేశం చూడటానికి చంద్ర దర్శన్ తెరవండి.',
+    ta: 'இன்றைய தனிப்பட்ட வாசிப்பைப் பார்க்க சந்திர தரிசனத்தைத் திறக்கவும்.',
   },
 };
 
