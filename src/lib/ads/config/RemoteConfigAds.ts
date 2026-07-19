@@ -34,7 +34,7 @@ export class RemoteConfigAds {
     const source = settings ?? this.config.settings;
     if (source?.['ads.master'] === false) return false;
     const value = source?.[placement];
-    return value === undefined ? true : !!value;
+    return value === undefined ? false : !!value;
   }
 
   updateSettings(settings: Record<string, boolean>): void {
