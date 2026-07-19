@@ -30,7 +30,7 @@ Production telemetry for Chandra Darshan: **Firebase Analytics** (page views, cu
    android/app/src/prod/google-services.json
    ```
 
-   This path is gitignored. Do not commit it.
+   This file is committed in the repo (prod flavor only).
 
 6. Rebuild so Gradle applies the Google Services and Crashlytics plugins:
 

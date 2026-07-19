@@ -37,7 +37,6 @@ yarn-error.log*
 # generated build pipeline artifacts
 android/.package-resolved.json
 .capacitor-package-mode
-android/app/src/prod/google-services.json
 
 # vercel
 .vercel
