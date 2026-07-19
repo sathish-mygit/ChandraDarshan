@@ -166,7 +166,7 @@ Configured for **prod flavor only**. See [docs/03-setup/02-firebase.md](../../do
 
 | Item | Location |
 |------|----------|
-| `google-services.json` | `android/app/src/prod/` (gitignored; you add after Console setup) |
+| `google-services.json` | `android/app/src/prod/` (committed; prod flavor only) |
 | Web Firebase keys | `.env.production` or `.env.local` |
 | Enable flag | `NEXT_PUBLIC_ANALYTICS_ENABLED=true` in prod env only |
 | Dev flavor | No Firebase file; telemetry suppressed in JS |

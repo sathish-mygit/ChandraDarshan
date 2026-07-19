@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "100397125304",
+    "project_id": "chandra-darshan-moon-astro",
+    "storage_bucket": "chandra-darshan-moon-astro.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:100397125304:android:64aceef130bd362c826e4d",
+        "android_client_info": {
+          "package_name": "com.sathish.utilites.chandra_darshan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNDmbZ9jrFhQSA3AcSe6-WpxGDZHwDF7M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
