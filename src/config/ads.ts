@@ -1,7 +1,8 @@
 /**
- * Ads configuration — native Android (AdMob) only.
+ * Ads configuration — native Android (AdMob) with Meta Audience Network mediation.
  *
- * Google sample IDs used when NEXT_PUBLIC_AD_USE_GOOGLE_SAMPLE_UNITS=true.
+ * Production ad unit IDs are required for AdMob mediation (Meta/Facebook).
+ * Google sample IDs (TEST_* below) are used only when NEXT_PUBLIC_AD_USE_GOOGLE_SAMPLE_UNITS=true.
  * Google test app ID: ca-app-pub-3940256099942544~3347511713
  */
 import { GraceType } from '@/lib/ads/core/types';

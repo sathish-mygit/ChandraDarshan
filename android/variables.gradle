@@ -13,4 +13,7 @@ ext {
     androidxJunitVersion = '1.3.0'
     androidxEspressoCoreVersion = '3.7.0'
     cordovaAndroidVersion = '14.0.1'
+    // AdMob Play Services Ads version (for @capacitor-community/admob + Meta mediation)
+    playServicesAdsVersion = '23.2.0'
+    androidxCoreKTXVersion = '1.17.0'
 }
