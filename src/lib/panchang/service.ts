@@ -25,6 +25,7 @@ import {
   getLocalDateKey,
   setCachedPanchang,
 } from './cache';
+import { resolveMasaSystem } from './masa-system';
 import { getSamvatsaraName } from './samvatsara';
 
 function parsePaksha(tithi: DailyTithiInfo): Paksha {
@@ -114,7 +115,8 @@ export async function fetchTodayPanchang(
     return cached;
   }
 
-  const { location, language, masaSystem } = prefs;
+  const { location, language, masaSystem: masaPreference } = prefs;
+  const masaSystem = resolveMasaSystem(masaPreference, location);
   const geo = {
     latitude: location.latitude,
     longitude: location.longitude,

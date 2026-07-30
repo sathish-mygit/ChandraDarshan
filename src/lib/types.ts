@@ -2,6 +2,8 @@ export type AppLanguage = 'en' | 'hi' | 'sa' | 'te' | 'ta';
 
 export type MasaSystem = 'amanta' | 'purnimanta';
 
+export type MasaSystemPreference = 'auto' | MasaSystem;
+
 export type LocationSource = 'city' | 'gps';
 
 export type StoredLocation = {
@@ -19,7 +21,7 @@ export type DailyReminderPreferences = {
 
 export type AppPreferences = {
   language: AppLanguage;
-  masaSystem: MasaSystem;
+  masaSystem: MasaSystemPreference;
   location: StoredLocation;
   birthProfile?: BirthProfile;
   dailyReminder?: DailyReminderPreferences;
@@ -217,4 +219,5 @@ export type CityEntry = {
   latitude: number;
   longitude: number;
   timezone: number | string;
+  masaSystem: MasaSystem;
 };

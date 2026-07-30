@@ -1,5 +1,6 @@
 import { Preferences } from '@capacitor/preferences';
 import type { AppPreferences, PanchangViewModel, TithiTimingEntry } from '../types';
+import { resolveMasaSystem } from './masa-system';
 import { getDateLocale } from '../i18n/locale';
 
 const CACHE_KEY = 'panchang.cache.v4';
@@ -13,13 +14,15 @@ export type PanchangCacheEntry = {
 };
 
 function buildCacheKey(prefs: AppPreferences, dateKey: string): string {
-  const { location, language, masaSystem } = prefs;
+  const { location, language, masaSystem: masaPreference } = prefs;
+  const masaSystem = resolveMasaSystem(masaPreference, location);
   return [
     dateKey,
     location.latitude.toFixed(4),
     location.longitude.toFixed(4),
     String(location.timezone),
     language,
+    masaPreference,
     masaSystem,
   ].join('|');
 }

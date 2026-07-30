@@ -1,13 +1,13 @@
 'use client';
 
 import { t } from '@/lib/i18n/labels';
-import type { AppLanguage, MasaSystem } from '@/lib/types';
+import type { AppLanguage, MasaSystemPreference } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 type MasaSystemPickerProps = {
-  value: MasaSystem;
+  value: MasaSystemPreference;
   language: AppLanguage;
-  onChange: (value: MasaSystem) => void;
+  onChange: (value: MasaSystemPreference) => void;
 };
 
 export function MasaSystemPicker({
@@ -15,7 +15,8 @@ export function MasaSystemPicker({
   language,
   onChange,
 }: MasaSystemPickerProps) {
-  const options: { value: MasaSystem; label: string }[] = [
+  const options: { value: MasaSystemPreference; label: string }[] = [
+    { value: 'auto', label: t('masaSystemAuto', language) },
     { value: 'purnimanta', label: t('purnimanta', language) },
     { value: 'amanta', label: t('amanta', language) },
   ];

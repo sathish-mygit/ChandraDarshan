@@ -16,6 +16,8 @@ type LabelKey =
   | 'useGps'
   | 'gpsLoading'
   | 'masaSystem'
+  | 'masaSystemAuto'
+  | 'masaSystemAutoUsing'
   | 'amanta'
   | 'purnimanta'
   | 'adhika'
@@ -207,6 +209,20 @@ const LABELS: Record<LabelKey, Record<AppLanguage, string>> = {
     sa: 'चन्द्रमासप्रणाली',
     te: 'చంద్ర మాస వ్యవస్థ',
     ta: 'சந்திர மாத முறை',
+  },
+  masaSystemAuto: {
+    en: 'Automatic (based on location)',
+    hi: 'स्वचालित (स्थान के अनुसार)',
+    sa: 'स्वयम् (स्थानानुसारम्)',
+    te: 'స్వయంచాలక (స్థానం ఆధారంగా)',
+    ta: 'தானியங்கி (இடத்தின் அடிப்படையில்)',
+  },
+  masaSystemAutoUsing: {
+    en: 'Using',
+    hi: 'प्रयोग में',
+    sa: 'प्रयुज्यते',
+    te: 'ఉపయోగిస్తోంది',
+    ta: 'பயன்படுத்தப்படுகிறது',
   },
   amanta: {
     en: 'Amanta (South Indian)',

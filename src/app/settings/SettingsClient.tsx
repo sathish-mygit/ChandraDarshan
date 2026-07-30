@@ -11,6 +11,7 @@ import { AdDiagnosticsPanel } from '@/components/AdDiagnosticsPanel';
 import { CrashlyticsTestPanel } from '@/components/CrashlyticsTestPanel';
 import { useAppPreferences } from '@/contexts/AppPreferencesContext';
 import { t } from '@/lib/i18n/labels';
+import { resolveMasaSystem } from '@/lib/panchang/masa-system';
 import {
   DEFAULT_DAILY_REMINDER_TIME,
   requestNotificationPermission,
@@ -28,6 +29,10 @@ export function SettingsClient() {
   const reminderTime =
     preferences.dailyReminder?.time ?? DEFAULT_DAILY_REMINDER_TIME;
   const [feedback, setFeedback] = useState<ReminderFeedback>(null);
+  const resolvedMasaSystem = resolveMasaSystem(
+    preferences.masaSystem,
+    preferences.location,
+  );
 
   async function handleToggleDailyReminder(enabled: boolean) {
     if (!hasBirthProfile) {
@@ -243,6 +248,15 @@ export function SettingsClient() {
                   void updatePreferences({ masaSystem })
                 }
               />
+              {preferences.masaSystem === 'auto' ? (
+                <p className="mt-2 text-xs text-slate-400">
+                  {t('masaSystemAutoUsing', language)}{' '}
+                  {t(
+                    resolvedMasaSystem === 'amanta' ? 'amanta' : 'purnimanta',
+                    language,
+                  )}
+                </p>
+              ) : null}
             </div>
           </div>
         </section>
