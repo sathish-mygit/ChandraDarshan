@@ -39,3 +39,17 @@ body {
 .font-tamil {
   font-family: var(--font-noto-tamil), var(--font-inter), sans-serif;
 }
+
+@keyframes moon-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 40px rgba(245, 158, 11, 0.12);
+  }
+  50% {
+    box-shadow: 0 0 80px rgba(245, 158, 11, 0.35);
+  }
+}
+
+.moon-reveal-glow {
+  animation: moon-glow 1.2s ease-in-out 1;
+}

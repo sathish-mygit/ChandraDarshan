@@ -2,7 +2,7 @@
 
 import { t } from '@/lib/i18n/labels';
 import { getScriptFontClass } from '@/lib/i18n/locale';
-import { formatPanchangTime } from '@/lib/panchang/cache';
+import { formatPanchangTime, formatPanchangTimeRange } from '@/lib/panchang/cache';
 import type { AppLanguage, PanchangViewModel } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
@@ -55,6 +55,38 @@ function TimingRow({
       <span className="text-slate-500">{label}</span>
       <span className="text-slate-300">
         {time ? formatPanchangTime(time) : t('notToday', language)}
+      </span>
+    </div>
+  );
+}
+
+function TithiTimelineRow({
+  name,
+  start,
+  end,
+  isCurrent,
+  language,
+}: {
+  name: string;
+  start: Date | null;
+  end: Date | null;
+  isCurrent: boolean;
+  language: AppLanguage;
+}) {
+  const range = formatPanchangTimeRange(start, end);
+
+  return (
+    <div
+      className={cn(
+        'flex items-start justify-between gap-4 py-1.5 text-xs',
+        isCurrent && 'rounded-md bg-amber-500/10 px-2 -mx-2',
+      )}
+    >
+      <span className={cn('text-slate-500', isCurrent && 'text-amber-400/90')}>
+        {name}
+      </span>
+      <span className={cn('text-slate-300', isCurrent && 'text-amber-100')}>
+        {range ?? t('notToday', language)}
       </span>
     </div>
   );
@@ -114,6 +146,30 @@ export function PanchangSummary({
         />
       </div>
 
+      {data.tithiTimeline.length > 0 ? (
+        <div className="mb-4 rounded-xl bg-slate-900/40 px-3 py-2">
+          <p className="mb-2 text-xs font-medium uppercase tracking-wider text-amber-500/70">
+            {t('tithiTimings', language)}
+          </p>
+          {data.previousTithi && data.previousTithiEnd ? (
+            <div className="mb-2 border-b border-slate-800/80 pb-2 text-xs text-slate-500">
+              {t('previousTithiEnded', language)}: {data.previousTithi}{' '}
+              {formatPanchangTime(data.previousTithiEnd)}
+            </div>
+          ) : null}
+          {data.tithiTimeline.map((entry) => (
+            <TithiTimelineRow
+              key={`${entry.name}-${entry.start?.toISOString() ?? 'start'}`}
+              name={entry.name}
+              start={entry.start}
+              end={entry.end}
+              isCurrent={entry.isCurrent}
+              language={language}
+            />
+          ))}
+        </div>
+      ) : null}
+
       <SummaryRow
         label={t('vara', language)}
         value={data.vara}
@@ -122,9 +178,10 @@ export function PanchangSummary({
         label={t('tithi', language)}
         value={data.tithi}
         subValue={
-          data.tithiUntil
+          formatPanchangTimeRange(data.tithiStart, data.tithiUntil) ??
+          (data.tithiUntil
             ? `${t('tithiUntil', language)} ${formatPanchangTime(data.tithiUntil)}`
-            : undefined
+            : undefined)
         }
       />
       <SummaryRow label={t('nakshatra', language)} value={data.nakshatra} />

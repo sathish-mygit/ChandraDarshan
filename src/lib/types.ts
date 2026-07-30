@@ -177,6 +177,13 @@ export type LifeDirectionViewModel = {
 
 export type Paksha = 'shukla' | 'krishna';
 
+export type TithiTimingEntry = {
+  name: string;
+  start: Date | null;
+  end: Date | null;
+  isCurrent: boolean;
+};
+
 export type PanchangViewModel = {
   tithi: string;
   paksha: Paksha;
@@ -189,6 +196,10 @@ export type PanchangViewModel = {
   vara: string;
   nakshatra: string;
   tithiUntil: Date | null;
+  tithiStart: Date | null;
+  previousTithi: string | null;
+  previousTithiEnd: Date | null;
+  tithiTimeline: TithiTimingEntry[];
   moonFill: number;
   isWaxing: boolean;
   sunrise: Date;

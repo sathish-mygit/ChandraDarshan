@@ -4,7 +4,12 @@ import {
   type DailyNakshatraInfo,
   type DailyTithiInfo,
 } from 'panchang-ts';
-import type { AppPreferences, Paksha, PanchangViewModel } from '../types';
+import type {
+  AppPreferences,
+  Paksha,
+  PanchangViewModel,
+  TithiTimingEntry,
+} from '../types';
 import {
   localizeFestival,
   localizeMaasa,
@@ -45,22 +50,37 @@ function computeMoonFill(
   return { moonFill: 1 - clamped, isWaxing: false };
 }
 
-function findActiveTithi(
+function findActiveTithiIndex(
   tithis: DailyTithiInfo[],
   now: Date,
-): DailyTithiInfo {
-  for (const tithi of tithis) {
+): number {
+  for (let index = 0; index < tithis.length; index++) {
+    const tithi = tithis[index];
     if (!tithi.startTime || !tithi.endTime) {
       continue;
     }
     const start = tithi.startTime.getTime();
     const end = tithi.endTime.getTime();
     if (now.getTime() >= start && now.getTime() < end) {
-      return tithi;
+      return index;
     }
   }
 
-  return tithis.find((tithi) => tithi.isActiveAtSunrise) ?? tithis[0];
+  const sunriseIndex = tithis.findIndex((tithi) => tithi.isActiveAtSunrise);
+  return sunriseIndex >= 0 ? sunriseIndex : 0;
+}
+
+function buildTithiTimeline(
+  tithis: DailyTithiInfo[],
+  activeIndex: number,
+  language: AppPreferences['language'],
+): TithiTimingEntry[] {
+  return tithis.map((tithi, index) => ({
+    name: localizeTithi(tithi.name, language),
+    start: tithi.startTime,
+    end: tithi.endTime,
+    isCurrent: index === activeIndex,
+  }));
 }
 
 function findActiveNakshatra(
@@ -116,7 +136,9 @@ export async function fetchTodayPanchang(
     language: libraryLanguage,
   });
 
-  const activeTithi = findActiveTithi(daily.tithis, now);
+  const activeTithiIndex = findActiveTithiIndex(daily.tithis, now);
+  const activeTithi = daily.tithis[activeTithiIndex];
+  const previousTithiInfo = daily.tithis[activeTithiIndex - 1];
   const activeNakshatra = findActiveNakshatra(daily.nakshatras, now);
   const instantTithi = instant?.tithi ?? activeTithi;
   const paksha = parsePaksha(activeTithi);
@@ -143,6 +165,16 @@ export async function fetchTodayPanchang(
     vara: localizeVara(daily.vara.name, language),
     nakshatra: localizeNakshatra(activeNakshatra.name, language),
     tithiUntil: activeTithi.endTime,
+    tithiStart: activeTithi.startTime,
+    previousTithi: previousTithiInfo
+      ? localizeTithi(previousTithiInfo.name, language)
+      : null,
+    previousTithiEnd: previousTithiInfo ? activeTithi.startTime : null,
+    tithiTimeline: buildTithiTimeline(
+      daily.tithis,
+      activeTithiIndex,
+      language,
+    ),
     moonFill,
     isWaxing,
     sunrise: daily.sunrise,

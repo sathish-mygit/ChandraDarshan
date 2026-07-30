@@ -52,6 +52,9 @@ type LabelKey =
   | 'vara'
   | 'nakshatra'
   | 'tithiUntil'
+  | 'tithiTimings'
+  | 'previousTithiEnded'
+  | 'currentTithi'
   | 'timings'
   | 'festivals'
   | 'notToday'
@@ -95,7 +98,9 @@ type LabelKey =
   | 'dailyReminderEnabled'
   | 'dailyReminderDisabled'
   | 'dailyReminderNotifTitle'
-  | 'dailyReminderNotifBody';
+  | 'dailyReminderNotifBody'
+  | 'moonPhaseWaxing'
+  | 'moonPhaseWaning';
 
 const LABELS: Record<LabelKey, Record<AppLanguage, string>> = {
   appTitle: {
@@ -455,6 +460,27 @@ const LABELS: Record<LabelKey, Record<AppLanguage, string>> = {
     te: 'తిథి వరకు',
     ta: 'திதி முடியும் நேரம்',
   },
+  tithiTimings: {
+    en: 'Tithi timings',
+    hi: 'तिथि का समय',
+    sa: 'तिथिकालाः',
+    te: 'తిథి సమయాలు',
+    ta: 'திதி நேரங்கள்',
+  },
+  previousTithiEnded: {
+    en: 'Previous tithi ended',
+    hi: 'पिछली तिथि समाप्त',
+    sa: 'पूर्वतिथिः समाप्ता',
+    te: 'మునుపటి తిథి ముగిసింది',
+    ta: 'முந்தைய திதி முடிந்தது',
+  },
+  currentTithi: {
+    en: 'Current tithi',
+    hi: 'वर्तमान तिथि',
+    sa: 'वर्तमानतिथिः',
+    te: 'ప్రస్తుత తిథి',
+    ta: 'தற்போதைய திதி',
+  },
   timings: {
     en: "Today's timings",
     hi: 'आज का समय',
@@ -762,6 +788,20 @@ const LABELS: Record<LabelKey, Record<AppLanguage, string>> = {
     sa: 'अद्यव्यक्तिगतवाचनं द्रष्टुं चन्द्रदर्शनं उद्घाटयतु।',
     te: 'ఈరోజు వ్యక్తిగత సందేశం చూడటానికి చంద్ర దర్శన్ తెరవండి.',
     ta: 'இன்றைய தனிப்பட்ட வாசிப்பைப் பார்க்க சந்திர தரிசனத்தைத் திறக்கவும்.',
+  },
+  moonPhaseWaxing: {
+    en: 'Shukla paksha — waxing moon',
+    hi: 'शुक्ल पक्ष — बढ़ता चन्द्र',
+    sa: 'शुक्लपक्षः — वर्धमानचन्द्रः',
+    te: 'శుక్ల పక్షం — పెరుగుతున్న చంద్రుడు',
+    ta: 'சுக்கில பக்ஷம் — வளரும் சந்திரன்',
+  },
+  moonPhaseWaning: {
+    en: 'Krishna paksha — waning moon',
+    hi: 'कृष्ण पक्ष — घटता चन्द्र',
+    sa: 'कृष्णपक्षः — क्षीयमाणचन्द्रः',
+    te: 'కృష్ణ పక్షం — తగ్గుతున్న చంద్రుడు',
+    ta: 'கிருஷ்ண பக்ஷம் — குறையும் சந்திரன்',
   },
 };
 

@@ -1,8 +1,8 @@
 import { Preferences } from '@capacitor/preferences';
-import type { AppPreferences, PanchangViewModel } from '../types';
+import type { AppPreferences, PanchangViewModel, TithiTimingEntry } from '../types';
 import { getDateLocale } from '../i18n/locale';
 
-const CACHE_KEY = 'panchang.cache.v3';
+const CACHE_KEY = 'panchang.cache.v4';
 
 export type PanchangCacheEntry = {
   cacheKey: string;
@@ -32,12 +32,27 @@ function serializeViewModel(data: PanchangViewModel): PanchangViewModel {
   };
 }
 
+function deserializeTithiTimeline(
+  raw: TithiTimingEntry[] | undefined,
+): TithiTimingEntry[] {
+  return (raw ?? []).map((entry) => ({
+    name: entry.name,
+    start: entry.start ? new Date(entry.start) : null,
+    end: entry.end ? new Date(entry.end) : null,
+    isCurrent: entry.isCurrent ?? false,
+  }));
+}
+
 function deserializeViewModel(raw: PanchangViewModel): PanchangViewModel {
   return {
     ...raw,
     sunrise: new Date(raw.sunrise),
     sunset: new Date(raw.sunset),
     tithiUntil: raw.tithiUntil ? new Date(raw.tithiUntil) : null,
+    tithiStart: raw.tithiStart ? new Date(raw.tithiStart) : null,
+    previousTithi: raw.previousTithi ?? null,
+    previousTithiEnd: raw.previousTithiEnd ? new Date(raw.previousTithiEnd) : null,
+    tithiTimeline: deserializeTithiTimeline(raw.tithiTimeline),
     moonrise: raw.moonrise ? new Date(raw.moonrise) : null,
     moonset: raw.moonset ? new Date(raw.moonset) : null,
     festivals: raw.festivals ?? [],
@@ -108,6 +123,22 @@ export function formatPanchangTime(date: Date): string {
   const displayHours = hours % 12 || 12;
   const displayMinutes = String(minutes).padStart(2, '0');
   return `${displayHours}:${displayMinutes} ${period}`;
+}
+
+export function formatPanchangTimeRange(
+  start: Date | null,
+  end: Date | null,
+): string | null {
+  if (start && end) {
+    return `${formatPanchangTime(start)} – ${formatPanchangTime(end)}`;
+  }
+  if (start) {
+    return formatPanchangTime(start);
+  }
+  if (end) {
+    return formatPanchangTime(end);
+  }
+  return null;
 }
 
 export function formatGregorianDate(date: Date, language: AppPreferences['language']): string {
