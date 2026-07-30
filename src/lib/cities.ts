@@ -7,6 +7,7 @@ export const CITIES: CityEntry[] = [
     latitude: 28.6139,
     longitude: 77.209,
     timezone: 330,
+    masaSystem: 'purnimanta',
   },
   {
     id: 'mumbai',
@@ -14,6 +15,7 @@ export const CITIES: CityEntry[] = [
     latitude: 19.076,
     longitude: 72.8777,
     timezone: 330,
+    masaSystem: 'amanta',
   },
   {
     id: 'bengaluru',
@@ -21,6 +23,7 @@ export const CITIES: CityEntry[] = [
     latitude: 12.9716,
     longitude: 77.5946,
     timezone: 330,
+    masaSystem: 'amanta',
   },
   {
     id: 'chennai',
@@ -28,6 +31,7 @@ export const CITIES: CityEntry[] = [
     latitude: 13.0827,
     longitude: 80.2707,
     timezone: 330,
+    masaSystem: 'amanta',
   },
   {
     id: 'kolkata',
@@ -35,6 +39,7 @@ export const CITIES: CityEntry[] = [
     latitude: 22.5726,
     longitude: 88.3639,
     timezone: 330,
+    masaSystem: 'purnimanta',
   },
   {
     id: 'hyderabad',
@@ -42,6 +47,7 @@ export const CITIES: CityEntry[] = [
     latitude: 17.385,
     longitude: 78.4867,
     timezone: 330,
+    masaSystem: 'amanta',
   },
   {
     id: 'pune',
@@ -49,6 +55,7 @@ export const CITIES: CityEntry[] = [
     latitude: 18.5204,
     longitude: 73.8567,
     timezone: 330,
+    masaSystem: 'amanta',
   },
   {
     id: 'ahmedabad',
@@ -56,6 +63,7 @@ export const CITIES: CityEntry[] = [
     latitude: 23.0225,
     longitude: 72.5714,
     timezone: 330,
+    masaSystem: 'amanta',
   },
   {
     id: 'jaipur',
@@ -63,6 +71,7 @@ export const CITIES: CityEntry[] = [
     latitude: 26.9124,
     longitude: 75.7873,
     timezone: 330,
+    masaSystem: 'purnimanta',
   },
   {
     id: 'lucknow',
@@ -70,6 +79,7 @@ export const CITIES: CityEntry[] = [
     latitude: 26.8467,
     longitude: 80.9462,
     timezone: 330,
+    masaSystem: 'purnimanta',
   },
   {
     id: 'varanasi',
@@ -77,6 +87,7 @@ export const CITIES: CityEntry[] = [
     latitude: 25.3176,
     longitude: 82.9739,
     timezone: 330,
+    masaSystem: 'purnimanta',
   },
   {
     id: 'ujjain',
@@ -84,6 +95,7 @@ export const CITIES: CityEntry[] = [
     latitude: 23.1765,
     longitude: 75.7885,
     timezone: 330,
+    masaSystem: 'purnimanta',
   },
 ];
 

@@ -1,21 +1,28 @@
 import { Preferences } from '@capacitor/preferences';
 import { cityToLocation, DEFAULT_CITY } from './cities';
-import type { AppPreferences } from './types';
+import type { AppPreferences, MasaSystemPreference } from './types';
 
 const PREFERENCES_KEY = 'app.preferences.v2';
 const LEGACY_PREFERENCES_KEY = 'app.preferences.v1';
 
 export const DEFAULT_PREFERENCES: AppPreferences = {
   language: 'en',
-  masaSystem: 'purnimanta',
+  masaSystem: 'auto',
   location: cityToLocation(DEFAULT_CITY),
 };
+
+function parseMasaSystem(value: unknown): MasaSystemPreference {
+  if (value === 'auto' || value === 'amanta' || value === 'purnimanta') {
+    return value;
+  }
+  return DEFAULT_PREFERENCES.masaSystem;
+}
 
 function parsePreferences(value: string): AppPreferences {
   const parsed = JSON.parse(value) as Partial<AppPreferences>;
   return {
     language: parsed.language ?? DEFAULT_PREFERENCES.language,
-    masaSystem: parsed.masaSystem ?? DEFAULT_PREFERENCES.masaSystem,
+    masaSystem: parseMasaSystem(parsed.masaSystem),
     location: parsed.location ?? DEFAULT_PREFERENCES.location,
     birthProfile: parsed.birthProfile,
     dailyReminder: parsed.dailyReminder,
