@@ -1,12 +1,12 @@
 {
   "parameters": {
     "ads_master": {
-      "defaultValue": { "value": "false" },
+      "defaultValue": { "value": "true" },
       "description": "Global master switch - disables all native ads if false",
       "valueType": "BOOLEAN"
     },
     "interstitial_toJyotish": {
-      "defaultValue": { "value": "false" },
+      "defaultValue": { "value": "true" },
       "description": "Show interstitial when navigating to Astro tab",
       "valueType": "BOOLEAN"
     },
@@ -112,6 +112,6 @@
     }
   },
   "version": {
-    "versionNumber": "1"
+    "versionNumber": "2"
   }
 }

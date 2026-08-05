@@ -15,6 +15,7 @@ import {
   logEvent,
   preferenceChangedParams,
 } from '@/lib/analytics';
+import { resolveApproximateLocation } from '@/lib/approximate-location';
 import { syncDailyReadingReminder } from '@/lib/notifications/daily-reminder';
 import {
   DEFAULT_PREFERENCES,
@@ -26,10 +27,13 @@ import type { AppPreferences, BirthProfile } from '@/lib/types';
 type AppPreferencesContextValue = {
   preferences: AppPreferences;
   birthProfile?: BirthProfile;
+  partnerBirthProfile?: BirthProfile;
   isLoading: boolean;
   updatePreferences: (patch: Partial<AppPreferences>) => Promise<void>;
   updateBirthProfile: (profile: BirthProfile | undefined) => Promise<void>;
   clearBirthProfile: () => Promise<void>;
+  updatePartnerBirthProfile: (profile: BirthProfile | undefined) => Promise<void>;
+  clearPartnerBirthProfile: () => Promise<void>;
 };
 
 const AppPreferencesContext = createContext<AppPreferencesContextValue | null>(
@@ -134,14 +138,72 @@ export function AppPreferencesProvider({ children }: { children: ReactNode }) {
     logEvent(ANALYTICS_EVENTS.BIRTH_PROFILE_CLEARED, {});
   }, [updateBirthProfile]);
 
+  const updatePartnerBirthProfile = useCallback(
+    async (profile: BirthProfile | undefined) => {
+      let next: AppPreferences = DEFAULT_PREFERENCES;
+      setPreferences((current) => {
+        next = { ...current, partnerBirthProfile: profile };
+        return next;
+      });
+      await savePreferences(next);
+
+      if (profile) {
+        logEvent(
+          ANALYTICS_EVENTS.PARTNER_PROFILE_SAVED,
+          birthProfileSavedParams(!profile.timeUnknown && Boolean(profile.birthTime)),
+        );
+      }
+    },
+    [],
+  );
+
+  const clearPartnerBirthProfile = useCallback(async () => {
+    await updatePartnerBirthProfile(undefined);
+    logEvent(ANALYTICS_EVENTS.PARTNER_PROFILE_CLEARED, {});
+  }, [updatePartnerBirthProfile]);
+
+  useEffect(() => {
+    if (isLoading || preferences.locationAutoDetected) {
+      return;
+    }
+
+    let cancelled = false;
+
+    async function detectApproximateLocation() {
+      const detected = await resolveApproximateLocation();
+      if (cancelled) {
+        return;
+      }
+
+      if (detected) {
+        await updatePreferences({
+          location: detected,
+          locationAutoDetected: true,
+        });
+        return;
+      }
+
+      await updatePreferences({ locationAutoDetected: true });
+    }
+
+    void detectApproximateLocation();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isLoading, preferences.locationAutoDetected, updatePreferences]);
+
   const value = useMemo(
     () => ({
       preferences,
       birthProfile: preferences.birthProfile,
+      partnerBirthProfile: preferences.partnerBirthProfile,
       isLoading,
       updatePreferences,
       updateBirthProfile,
       clearBirthProfile,
+      updatePartnerBirthProfile,
+      clearPartnerBirthProfile,
     }),
     [
       preferences,
@@ -149,6 +211,8 @@ export function AppPreferencesProvider({ children }: { children: ReactNode }) {
       updatePreferences,
       updateBirthProfile,
       clearBirthProfile,
+      updatePartnerBirthProfile,
+      clearPartnerBirthProfile,
     ],
   );
 

@@ -2,6 +2,7 @@ import {
   computeRashiChart,
   computeSadeSati,
   computeVimshottariDashaFromBirth,
+  computeNavamsa,
   computeYogas,
 } from 'panchang-ts';
 import type {
@@ -18,6 +19,11 @@ import {
   getSadeSatiPhaseDescription,
   getYogaDescription,
 } from '../i18n/jyotish-themes';
+import { translateYogaReason } from '../i18n/jyotish-explanations';
+import {
+  getPlanetInHouseEffect,
+  getYogaEffect,
+} from '../i18n/jyotish-effects';
 import {
   buildDashaPeriodInsights,
   findActiveDashaPeriods,
@@ -98,11 +104,24 @@ export function computeLifeDirection(
       houseSystem: 'whole-sign',
       language: libraryLanguage,
     });
-    const detected = computeYogas(chart);
+    const d9 = computeNavamsa(birth, location, {
+      language: libraryLanguage,
+    });
+    const detected = computeYogas(chart, { navamsa: d9 });
     yogas = detected.slice(0, 6).map((yoga) => ({
       name: yoga.name,
       type: yoga.type,
       description: getYogaDescription(yoga.name, language),
+      effect:
+        getYogaEffect(yoga.name, yoga.reasons, language) ||
+        getYogaDescription(yoga.name, language),
+      reasons: yoga.reasons,
+      how:
+        yoga.reasons.length > 0
+          ? yoga.reasons
+              .map((r) => translateYogaReason(r, language))
+              .join(' ')
+          : '',
     }));
   }
 
@@ -118,6 +137,11 @@ export function computeLifeDirection(
           planet.planet,
           planet.house,
           houseTheme,
+          language,
+        ),
+        effect: getPlanetInHouseEffect(
+          planet.planet,
+          planet.house,
           language,
         ),
       };

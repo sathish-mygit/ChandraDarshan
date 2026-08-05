@@ -16,6 +16,9 @@ Read in order: **01-project** → **02-decisions** → **03-setup** → **04-arc
 | [002](02-decisions/adr-002-offline-panchang.md) | Offline Panchang via panchang-ts | Accepted |
 | [003](02-decisions/adr-003-no-database-v1.md) | No local database in v1 | Accepted |
 | [004](02-decisions/adr-004-jyotish-scope.md) | Offline personal Jyotish scope | Accepted |
+| [005](02-decisions/adr-005-approximate-location.md) | Approximate location via IP geolocation | Accepted |
+| [006](02-decisions/adr-006-jyotish-educational-expansion.md) | Educational Jyotish expansion (sub-tabs, ExplainedInsight) | Accepted |
+| [007](02-decisions/adr-007-kundali-matching.md) | Offline Kundali matching (Ashtakoot + synastry) | Accepted |
 
 ## 03-setup
 
@@ -34,3 +37,4 @@ Read in order: **01-project** → **02-decisions** → **03-setup** → **04-arc
 |---|----------|--------|---------|
 | 01 | [panchang data flow](04-architecture/01-panchang-data-flow.md) | Active | Preferences → cache → panchang-ts → home UI |
 | 02 | [jyotish data flow](04-architecture/02-jyotish-data-flow.md) | Active | Birth profile → natal + personal today → Jyotish tab |
+| 03 | [kundali match data flow](04-architecture/03-kundali-match-data-flow.md) | Active | Partner profile → Ashtakoot + synastry → Match tab |

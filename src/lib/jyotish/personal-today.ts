@@ -4,11 +4,13 @@ import {
   getDailyPanchang,
 } from 'panchang-ts';
 import type { HoraInfo } from 'panchang-ts';
+import type { ChoghadiyaInfo } from 'panchang-ts';
 import type {
   AppLanguage,
   BirthProfile,
   PersonalTodayViewModel,
   StoredLocation,
+  TimeWindow,
 } from '../types';
 import {
   getChandraBalamContext,
@@ -17,7 +19,14 @@ import {
   getHoraPeriodExplanation,
   getTaraDescription,
 } from '../i18n/jyotish-themes';
+import {
+  buildChoghadiyaExplanation,
+  buildRahuKalamExplanation,
+  buildWeeklyTone,
+} from '../i18n/jyotish-explanations';
 import { buildDailyReading } from '../i18n/daily-reading';
+import { buildExplainedDailyInsights } from './explained-daily';
+import { buildTopTransitInsights } from './transits';
 import { getJanmaIndices, computeNatalSnapshot } from './natal';
 import {
   birthInstantFromProfile,
@@ -60,6 +69,59 @@ function findCurrentHora(
   return (
     slots.find((slot) => now >= slot.start && now < slot.end) ?? null
   );
+}
+
+function findCurrentChoghadiya(
+  choghadiya: ChoghadiyaInfo,
+  now: Date,
+): { current: TimeWindow; next?: TimeWindow } | null {
+  const slots = [...choghadiya.day, ...choghadiya.night];
+  const currentIndex = slots.findIndex(
+    (slot) => now >= slot.start && now < slot.end,
+  );
+  if (currentIndex < 0) {
+    return null;
+  }
+
+  const currentSlot = slots[currentIndex]!;
+  const nextSlot = slots[currentIndex + 1];
+
+  return {
+    current: {
+      label: currentSlot.name,
+      start: currentSlot.start.toISOString(),
+      end: currentSlot.end.toISOString(),
+      quality: currentSlot.quality,
+      explanation: '',
+    },
+    next: nextSlot
+      ? {
+          label: nextSlot.name,
+          start: nextSlot.start.toISOString(),
+          end: nextSlot.end.toISOString(),
+          quality: nextSlot.quality,
+          explanation: '',
+        }
+      : undefined,
+  };
+}
+
+function formatChoghadiyaWindow(
+  slot: TimeWindow,
+  language: AppLanguage,
+): TimeWindow {
+  const start = new Date(slot.start);
+  const end = new Date(slot.end);
+  return {
+    ...slot,
+    start: formatTime(start, language),
+    end: formatTime(end, language),
+    explanation: buildChoghadiyaExplanation(
+      slot.label,
+      slot.quality ?? 'neutral',
+      language,
+    ),
+  };
 }
 
 function buildTeaserSummary(
@@ -183,6 +245,49 @@ export async function fetchPersonalToday(
     language,
   );
 
+  const explainedInsights = buildExplainedDailyInsights(
+    {
+      chandraHouse: daily.chandraBalam.house,
+      chandraQuality: daily.chandraBalam.quality,
+      todayMoonRashi: daily.chandraRashi.name,
+      birthMoonRashi: natal.moonRashi,
+      taraIndex: daily.tarabala.taraIndex,
+      taraQuality: daily.tarabala.quality,
+      todayNakshatra,
+      birthNakshatra: natal.moonNakshatra,
+      antarDasha: activeDasha.antar,
+      pratyantarDasha: activeDasha.pratyantar,
+      sadeSatiActive: sadeSati.active,
+      sadeSatiPhase: sadeSati.phase ?? undefined,
+      natal,
+    },
+    language,
+  );
+
+  const transitInsights = buildTopTransitInsights(natal, language, now, 3);
+
+  const choghadiyaSlots = findCurrentChoghadiya(daily.choghadiya, now);
+  const currentChoghadiya = choghadiyaSlots
+    ? formatChoghadiyaWindow(choghadiyaSlots.current, language)
+    : undefined;
+  const nextChoghadiya = choghadiyaSlots?.next
+    ? formatChoghadiyaWindow(choghadiyaSlots.next, language)
+    : undefined;
+
+  const rahuKalam: TimeWindow = {
+    label: 'Rahu Kalam',
+    start: formatTime(daily.rahuKalam.start, language),
+    end: formatTime(daily.rahuKalam.end, language),
+    quality: 'inauspicious',
+    explanation: buildRahuKalamExplanation(language),
+  };
+
+  const weeklyTone = buildWeeklyTone(
+    activeDasha.pratyantar,
+    transitInsights[0]?.summary ?? '',
+    language,
+  );
+
   const viewModel: PersonalTodayViewModel = {
     chandraBalam: {
       name: daily.chandraBalam.name,
@@ -224,6 +329,12 @@ export async function fetchPersonalToday(
       activeDasha.antar,
       language,
     ),
+    explainedInsights,
+    transitInsights,
+    currentChoghadiya,
+    nextChoghadiya,
+    rahuKalam,
+    weeklyTone,
   };
 
   await setCachedPersonalToday(

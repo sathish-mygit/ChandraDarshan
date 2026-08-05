@@ -233,6 +233,11 @@ export function SettingsClient() {
                 language={language}
                 onSuccess={(location) => void updatePreferences({ location })}
               />
+              {preferences.location.source === 'approx' ? (
+                <p className="text-xs text-slate-400">
+                  {t('locationApproxHint', language)}
+                </p>
+              ) : null}
             </div>
           </div>
 

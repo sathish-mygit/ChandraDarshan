@@ -226,7 +226,7 @@
     <ul>
       <li>Language preference (English, Hindi, Sanskrit, Telugu, or Tamil)</li>
       <li>Lunar month system preference (Amanta or Purnimanta)</li>
-      <li>Location used for Panchang calculations — either a city you select or GPS coordinates if you grant permission</li>
+      <li>Location used for Panchang calculations — a city you select, approximate location detected automatically on first launch, or GPS coordinates if you grant permission</li>
     </ul>
 
     <h3>3.2 Optional birth profile (Jyotish)</h3>
@@ -268,11 +268,12 @@
     <p>The App uses location only to calculate accurate Panchang times for your area.</p>
     <ul>
       <li>If you select a city, the App uses that city’s coordinates and timezone.</li>
+      <li>On first launch, if you have not chosen a location, the App may make a one-time request to a third-party IP geolocation service to estimate your approximate location (city-level). This does not require location permission. We do not send your coordinates to our servers; the third-party service may see your IP address.</li>
       <li>If you choose GPS, the App requests location permission and reads your current coordinates and device timezone.</li>
       <li>Location is used for calculations within the App. We do not upload your GPS coordinates or city selection to our servers.</li>
     </ul>
     <p>
-      In analytics, we may record only whether your location source is <em>city</em> or <em>gps</em>, not the
+      In analytics, we may record only whether your location source is <em>city</em>, <em>approx</em>, or <em>gps</em>, not the
       actual coordinates or city name.
     </p>
 

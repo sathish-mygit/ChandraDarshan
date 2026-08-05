@@ -6,7 +6,7 @@ import type {
   StoredLocation,
 } from '../types';
 
-const CACHE_KEY = 'jyotish.personal.v5';
+const CACHE_KEY = 'jyotish.personal.v6';
 
 type PersonalCacheEntry = {
   cacheKey: string;

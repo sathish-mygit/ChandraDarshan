@@ -24,7 +24,9 @@ function parsePreferences(value: string): AppPreferences {
     language: parsed.language ?? DEFAULT_PREFERENCES.language,
     masaSystem: parseMasaSystem(parsed.masaSystem),
     location: parsed.location ?? DEFAULT_PREFERENCES.location,
+    locationAutoDetected: parsed.locationAutoDetected ?? false,
     birthProfile: parsed.birthProfile,
+    partnerBirthProfile: parsed.partnerBirthProfile,
     dailyReminder: parsed.dailyReminder,
   };
 }

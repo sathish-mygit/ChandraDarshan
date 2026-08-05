@@ -61,6 +61,9 @@ export function LifeMilestonesTimeline({
                     </span>
                     {milestone.kind === 'sadeSati' ? (
                       <LearnTooltip termId="sadeSati" language={language} />
+                    ) : milestone.kind === 'jupiterTransit' ||
+                      milestone.kind === 'saturnTransit' ? (
+                      <LearnTooltip termId="transit" language={language} />
                     ) : (
                       <LearnTooltip termId="mahaDasha" language={language} />
                     )}
@@ -90,6 +93,11 @@ export function LifeMilestonesTimeline({
               >
                 {milestone.description}
               </p>
+              {milestone.how ? (
+                <p className="mt-1 text-[11px] leading-relaxed text-slate-500">
+                  {milestone.how}
+                </p>
+              ) : null}
             </div>
           </div>
         ))}

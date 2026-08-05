@@ -11,6 +11,7 @@ type BirthProfileFormProps = {
   initial?: BirthProfile;
   onSave: (profile: BirthProfile) => void;
   onClear?: () => void;
+  variant?: 'self' | 'partner';
 };
 
 export function BirthProfileForm({
@@ -18,6 +19,7 @@ export function BirthProfileForm({
   initial,
   onSave,
   onClear,
+  variant = 'self',
 }: BirthProfileFormProps) {
   const defaultLocation =
     initial?.birthLocation ?? cityToLocation(CITIES[0]);
@@ -42,12 +44,21 @@ export function BirthProfileForm({
     });
   }
 
+  const nameLabel =
+    variant === 'partner' ? t('partnerName', language) : t('userName', language);
+  const saveLabel =
+    variant === 'partner'
+      ? t('savePartnerProfile', language)
+      : t('saveProfile', language);
+  const clearLabel =
+    variant === 'partner'
+      ? t('clearPartnerProfile', language)
+      : t('clearProfile', language);
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="text-sm text-slate-400">
-          {t('userName', language)}
-        </label>
+        <label className="text-sm text-slate-400">{nameLabel}</label>
         <input
           type="text"
           value={name}
@@ -120,7 +131,7 @@ export function BirthProfileForm({
         type="submit"
         className="w-full rounded-xl border border-amber-500/40 bg-amber-500/15 py-2.5 text-sm font-medium text-amber-100 transition hover:bg-amber-500/25"
       >
-        {t('saveProfile', language)}
+        {saveLabel}
       </button>
 
       {onClear && initial ? (
@@ -129,7 +140,7 @@ export function BirthProfileForm({
           onClick={onClear}
           className="w-full text-sm text-slate-500 hover:text-slate-300"
         >
-          {t('clearProfile', language)}
+          {clearLabel}
         </button>
       ) : null}
     </form>
