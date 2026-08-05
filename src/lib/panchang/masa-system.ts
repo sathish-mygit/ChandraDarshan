@@ -1,4 +1,5 @@
 import { CITIES } from '../cities';
+import { findNearestCityWithinKm } from '../geo';
 import type {
   MasaSystem,
   MasaSystemPreference,
@@ -6,21 +7,6 @@ import type {
 } from '../types';
 
 const NEARBY_CITY_KM = 50;
-
-function haversineKm(
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number,
-): number {
-  const toRad = (deg: number) => (deg * Math.PI) / 180;
-  const dLat = toRad(lat2 - lat1);
-  const dLon = toRad(lon2 - lon1);
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
-  return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-}
 
 export function inferMasaSystemFromCoords(
   latitude: number,
@@ -44,34 +30,10 @@ export function inferMasaSystemFromCoords(
 function findPresetCity(location: StoredLocation) {
   return CITIES.find(
     (city) =>
-      location.source === 'city' &&
+      (location.source === 'city' || location.source === 'approx') &&
       city.latitude === location.latitude &&
       city.longitude === location.longitude,
   );
-}
-
-function findNearestPresetCity(latitude: number, longitude: number) {
-  let nearest: (typeof CITIES)[number] | undefined;
-  let nearestDistanceKm = Number.POSITIVE_INFINITY;
-
-  for (const city of CITIES) {
-    const distanceKm = haversineKm(
-      latitude,
-      longitude,
-      city.latitude,
-      city.longitude,
-    );
-    if (distanceKm < nearestDistanceKm) {
-      nearest = city;
-      nearestDistanceKm = distanceKm;
-    }
-  }
-
-  if (!nearest || nearestDistanceKm > NEARBY_CITY_KM) {
-    return null;
-  }
-
-  return nearest;
 }
 
 export function resolveMasaSystem(
@@ -87,9 +49,10 @@ export function resolveMasaSystem(
     return presetCity.masaSystem;
   }
 
-  const nearbyCity = findNearestPresetCity(
+  const nearbyCity = findNearestCityWithinKm(
     location.latitude,
     location.longitude,
+    NEARBY_CITY_KM,
   );
   if (nearbyCity) {
     return nearbyCity.masaSystem;

@@ -138,12 +138,33 @@ export function LifeDirectionCard({ data, language }: LifeDirectionCardProps) {
                 </div>
                 <p
                   className={cn(
-                    'mt-1 text-xs leading-relaxed text-slate-400',
+                    'mt-1 text-xs leading-relaxed text-slate-500',
                     useDevanagari && 'font-devanagari',
                   )}
                 >
                   {yoga.description}
                 </p>
+                {yoga.effect ? (
+                  <p
+                    className={cn(
+                      'mt-2 text-xs leading-relaxed text-slate-300',
+                      useDevanagari && 'font-devanagari',
+                    )}
+                  >
+                    <span className="text-amber-500/80">
+                      {t('yogaEffect', language)}:{' '}
+                    </span>
+                    {yoga.effect}
+                  </p>
+                ) : null}
+                {yoga.how ? (
+                  <p className="mt-2 text-xs text-slate-500">
+                    <span className="text-amber-500/80">
+                      {t('yogaTechnical', language)}:{' '}
+                    </span>
+                    {yoga.how}
+                  </p>
+                ) : null}
               </div>
             ))}
           </div>
@@ -157,17 +178,27 @@ export function LifeDirectionCard({ data, language }: LifeDirectionCardProps) {
           </h3>
           <div className="space-y-2">
             {data.planetInsights.map((planet) => (
-              <p
-                key={planet.planet}
-                className={cn(
-                  'text-xs leading-relaxed text-slate-400',
-                  useDevanagari && 'font-devanagari',
-                )}
-              >
-                <span className="text-amber-100">{planet.planet}</span>
-                {' · '}
-                {planet.insight}
-              </p>
+              <div key={planet.planet} className="text-xs leading-relaxed">
+                <p className="font-medium text-amber-100">{planet.planet}</p>
+                {planet.effect ? (
+                  <p
+                    className={cn(
+                      'mt-1 text-slate-300',
+                      useDevanagari && 'font-devanagari',
+                    )}
+                  >
+                    {planet.effect}
+                  </p>
+                ) : null}
+                <p
+                  className={cn(
+                    'mt-1 text-slate-500',
+                    useDevanagari && 'font-devanagari',
+                  )}
+                >
+                  {planet.insight}
+                </p>
+              </div>
             ))}
           </div>
         </div>

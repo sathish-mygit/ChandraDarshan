@@ -4,13 +4,14 @@ import { LearnTooltip } from '@/components/LearnTooltip';
 import { t } from '@/lib/i18n/labels';
 import { getScriptFontClass } from '@/lib/i18n/locale';
 import type { GlossaryTermId } from '@/lib/i18n/glossary';
-import type { AppLanguage, NatalSnapshot } from '@/lib/types';
+import type { AppLanguage, DignityInsight, NatalSnapshot } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
 type NatalChartSummaryProps = {
   snapshot: NatalSnapshot;
   timeUnknown: boolean;
   language: AppLanguage;
+  dignities?: DignityInsight[];
 };
 
 function houseTermId(house: number): GlossaryTermId {
@@ -21,6 +22,7 @@ export function NatalChartSummary({
   snapshot,
   timeUnknown,
   language,
+  dignities,
 }: NatalChartSummaryProps) {
   const scriptFont = getScriptFontClass(language);
 
@@ -92,11 +94,16 @@ export function NatalChartSummary({
               <tr className="text-slate-500">
                 <th className="pb-2 pr-3">Planet</th>
                 <th className="pb-2 pr-3">House</th>
-                <th className="pb-2">Rashi</th>
+                <th className="pb-2 pr-3">Rashi</th>
+                {dignities ? <th className="pb-2">Dignity</th> : null}
               </tr>
             </thead>
             <tbody>
-              {snapshot.planets.map((planet) => (
+              {snapshot.planets.map((planet) => {
+                const dignity = dignities?.find(
+                  (d) => d.planet === planet.planet,
+                );
+                return (
                 <tr
                   key={planet.planet}
                   className="border-t border-slate-800/60 text-slate-300"
@@ -116,14 +123,20 @@ export function NatalChartSummary({
                   </td>
                   <td
                     className={cn(
-                      'py-2',
+                      'py-2 pr-3',
                       scriptFont,
                     )}
                   >
                     {planet.rashi}
                   </td>
+                  {dignities ? (
+                    <td className="py-2 text-xs text-slate-400">
+                      {dignity?.dignity ?? '—'}
+                    </td>
+                  ) : null}
                 </tr>
-              ))}
+              );
+              })}
             </tbody>
           </table>
         </div>

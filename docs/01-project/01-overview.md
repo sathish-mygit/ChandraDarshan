@@ -21,11 +21,14 @@ A daily Indian lunar calendar app. When users open it, they see the moon phase a
 
 ## Phase 3 status (complete)
 
-- Bottom tab navigation: Today | Jyotish
+- Bottom tab navigation: Today | Jyotish | Match | Settings
 - Birth profile (optional birth time) in preferences v2
+- Partner profile for Kundali matching (`partnerBirthProfile`)
+- Match tab: North Indian Ashtakoot (36 pts), Mangal pairing, chart synastry when birth time known
 - Jyotish page: Chandra Balam, Tarabala, Vimshottari dasha, Sade Sati
+- Jyotish sub-tabs: Today (explained insights, transits, sky windows), Chart (Navamsa, dignities, doshas), Timeline (milestones, annual outlook), Learn (glossary + articles)
 - Natal chart (lagna + planets in houses) when birth time is known
-- Beginner glossary tooltips and templated daily guidance
+- Beginner glossary tooltips and ExplainedInsight cards (what/how/why/practical)
 - Home teaser link when birth profile exists
 
 ## Phase 4 status (partial)
@@ -38,7 +41,9 @@ A daily Indian lunar calendar app. When users open it, they see the moon phase a
 
 - i18n polish beyond core labels — ongoing
 - Remote Config, AdMob — later
-- Kundli wheel, Navamsa, doshas, matching — deferred per ADR-004
+- Kundli wheel SVG — deferred per ADR-004
+- Porutham/Dashakoot (South Indian matching) — deferred
+- Multiple saved partner profiles — deferred
 
 ## Key paths
 
@@ -46,6 +51,7 @@ A daily Indian lunar calendar app. When users open it, they see the moon phase a
 |------|------|
 | `src/app/page.tsx` | Home (via `HomeClient`) |
 | `src/app/jyotish/page.tsx` | Jyotish (via `JyotishClient`) |
+| `src/app/match/page.tsx` | Kundali match (via `MatchClient`) |
 | `src/app/settings/page.tsx` | Settings (via `SettingsClient`) |
 | `src/lib/panchang/service.ts` | Panchang computation |
 | `src/lib/jyotish/` | Natal + personal today |

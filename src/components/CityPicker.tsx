@@ -14,7 +14,7 @@ export function CityPicker({ value, onChange }: CityPickerProps) {
       (city) =>
         city.latitude === value.latitude &&
         city.longitude === value.longitude &&
-        value.source === 'city',
+        (value.source === 'city' || value.source === 'approx'),
     )?.id ?? '';
 
   return (

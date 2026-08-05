@@ -2,11 +2,18 @@
 
 import { useState } from 'react';
 import { BirthProfileForm } from '@/components/BirthProfileForm';
-import { ForYouTodayCard } from '@/components/ForYouTodayCard';
+import { JyotishChartTab } from '@/components/JyotishChartTab';
 import { JyotishEmptyState } from '@/components/JyotishEmptyState';
-import { LifeDirectionCard } from '@/components/LifeDirectionCard';
-import { NatalChartSummary } from '@/components/NatalChartSummary';
+import { JyotishLearnTab } from '@/components/JyotishLearnTab';
+import {
+  JyotishSubTabs,
+  type JyotishTabId,
+} from '@/components/JyotishSubTabs';
+import { JyotishTimelineTab } from '@/components/JyotishTimelineTab';
+import { JyotishTodayTab } from '@/components/JyotishTodayTab';
 import { useAppPreferences } from '@/contexts/AppPreferencesContext';
+import { useAnnualOutlook } from '@/hooks/useAnnualOutlook';
+import { useChartDepth } from '@/hooks/useChartDepth';
 import { useLifeDirection } from '@/hooks/useLifeDirection';
 import { useNatalChart } from '@/hooks/useNatalChart';
 import { usePersonalToday } from '@/hooks/usePersonalToday';
@@ -24,8 +31,11 @@ export function JyotishClient() {
   const language = preferences.language;
   const { snapshot } = useNatalChart();
   const { data: lifeDirection } = useLifeDirection();
+  const { data: chartDepth } = useChartDepth();
+  const { data: annualOutlook } = useAnnualOutlook();
   const { data: personalToday, isLoading: personalLoading, error, refresh } =
     usePersonalToday();
+  const [activeTab, setActiveTab] = useState<JyotishTabId>('today');
   const [showEdit, setShowEdit] = useState(!birthProfile);
 
   async function handleSave(profile: BirthProfile) {
@@ -80,7 +90,13 @@ export function JyotishClient() {
           </>
         ) : (
           <>
-            {personalLoading ? (
+            <JyotishSubTabs
+              active={activeTab}
+              onChange={setActiveTab}
+              language={language}
+            />
+
+            {personalLoading && activeTab === 'today' ? (
               <p className="text-sm text-slate-400">
                 {t('loadingJyotish', language)}
               </p>
@@ -90,19 +106,31 @@ export function JyotishClient() {
               <p className="text-sm text-red-300">{error}</p>
             ) : null}
 
-            {personalToday ? (
-              <ForYouTodayCard data={personalToday} language={language} />
+            {activeTab === 'today' && personalToday ? (
+              <JyotishTodayTab data={personalToday} language={language} />
             ) : null}
 
-            {lifeDirection ? (
-              <LifeDirectionCard data={lifeDirection} language={language} />
-            ) : null}
-
-            {snapshot ? (
-              <NatalChartSummary
+            {activeTab === 'chart' ? (
+              <JyotishChartTab
                 snapshot={snapshot}
+                chartDepth={chartDepth}
                 timeUnknown={birthProfile.timeUnknown}
                 language={language}
+              />
+            ) : null}
+
+            {activeTab === 'timeline' ? (
+              <JyotishTimelineTab
+                lifeDirection={lifeDirection}
+                annualOutlook={annualOutlook}
+                language={language}
+              />
+            ) : null}
+
+            {activeTab === 'learn' ? (
+              <JyotishLearnTab
+                language={language}
+                timeUnknown={birthProfile.timeUnknown}
               />
             ) : null}
 

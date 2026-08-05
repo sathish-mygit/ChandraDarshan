@@ -15,6 +15,7 @@ type LabelKey =
   | 'city'
   | 'useGps'
   | 'gpsLoading'
+  | 'locationApproxHint'
   | 'masaSystem'
   | 'masaSystemAuto'
   | 'masaSystemAutoUsing'
@@ -28,6 +29,7 @@ type LabelKey =
   | 'calendarPrefs'
   | 'tabToday'
   | 'tabJyotish'
+  | 'tabMatch'
   | 'tabSettings'
   | 'jyotishTitle'
   | 'forYouToday'
@@ -102,7 +104,51 @@ type LabelKey =
   | 'dailyReminderNotifTitle'
   | 'dailyReminderNotifBody'
   | 'moonPhaseWaxing'
-  | 'moonPhaseWaning';
+  | 'moonPhaseWaning'
+  | 'jyotishTabToday'
+  | 'jyotishTabChart'
+  | 'jyotishTabTimeline'
+  | 'jyotishTabLearn'
+  | 'explainedInsights'
+  | 'transitInsights'
+  | 'skyWindows'
+  | 'currentChoghadiya'
+  | 'nextChoghadiya'
+  | 'rahuKalam'
+  | 'weeklyTone'
+  | 'chartDepthLocked'
+  | 'chartDepthLockedHint'
+  | 'navamsaSummary'
+  | 'planetDignities'
+  | 'chartDoshas'
+  | 'annualOutlook'
+  | 'annualOutlookSubtitle'
+  | 'learnGlossary'
+  | 'learnArticles'
+  | 'searchGlossary'
+  | 'yogaReasons'
+  | 'yogaEffect'
+  | 'yogaTechnical'
+  | 'showDetails'
+  | 'matchTitle'
+  | 'matchSubtitle'
+  | 'matchEmptySelf'
+  | 'matchEmptyPartner'
+  | 'partnerProfile'
+  | 'partnerName'
+  | 'savePartnerProfile'
+  | 'clearPartnerProfile'
+  | 'editPartnerDetails'
+  | 'matchScoreTitle'
+  | 'matchGunaBreakdown'
+  | 'matchMangalPairing'
+  | 'matchSynastry'
+  | 'matchSynastryLocked'
+  | 'matchNadiDosha'
+  | 'matchBhakootDosha'
+  | 'matchSelfMoon'
+  | 'matchPartnerMoon'
+  | 'matchConventionNote';
 
 const LABELS: Record<LabelKey, Record<AppLanguage, string>> = {
   appTitle: {
@@ -203,6 +249,13 @@ const LABELS: Record<LabelKey, Record<AppLanguage, string>> = {
     te: 'స్థానం పొందుతోంది…',
     ta: 'இடம் பெறப்படுகிறது…',
   },
+  locationApproxHint: {
+    en: 'Detected automatically (approximate)',
+    hi: 'स्वचालित रूप से पता लगाया गया (अनुमानित)',
+    sa: 'स्वयं ज्ञातम् (सामान्यम्)',
+    te: 'స్వయంచాలకంగా గుర్తించబడింది (సామాన్యం)',
+    ta: 'தானாகக் கண்டறியப்பட்டது (தோராயமானது)',
+  },
   masaSystem: {
     en: 'Lunar month system',
     hi: 'चंद्र मास प्रणाली',
@@ -293,6 +346,13 @@ const LABELS: Record<LabelKey, Record<AppLanguage, string>> = {
     sa: 'ज्योतिषम्',
     te: 'జ్యోతిషం',
     ta: 'ஜோதிடம்',
+  },
+  tabMatch: {
+    en: 'Match',
+    hi: 'मिलान',
+    sa: 'मिलनम्',
+    te: 'పోలిక',
+    ta: 'பொருத்தம்',
   },
   tabSettings: {
     en: 'Settings',
@@ -819,10 +879,322 @@ const LABELS: Record<LabelKey, Record<AppLanguage, string>> = {
     te: 'కృష్ణ పక్షం — తగ్గుతున్న చంద్రుడు',
     ta: 'கிருஷ்ண பக்ஷம் — குறையும் சந்திரன்',
   },
+  jyotishTabToday: {
+    en: 'Today',
+    hi: 'आज',
+    sa: 'अद्य',
+    te: 'ఈరోజు',
+    ta: 'இன்று',
+  },
+  jyotishTabChart: {
+    en: 'Chart',
+    hi: 'कुंडली',
+    sa: 'कुण्डली',
+    te: 'కుండలి',
+    ta: 'ஜாதகம்',
+  },
+  jyotishTabTimeline: {
+    en: 'Timeline',
+    hi: 'समयरेखा',
+    sa: 'कालरेखा',
+    te: 'కాలరేఖ',
+    ta: 'காலவரிசை',
+  },
+  jyotishTabLearn: {
+    en: 'Learn',
+    hi: 'जानें',
+    sa: 'ज्ञानम्',
+    te: 'తెలుసుకోండి',
+    ta: 'கற்றல்',
+  },
+  explainedInsights: {
+    en: 'How we read today',
+    hi: 'आज कैसे पढ़ें',
+    sa: 'अद्य कथं पठामः',
+    te: 'ఈరోజు ఎలా చదవాలి',
+    ta: 'இன்று எப்படி படிப்பது',
+  },
+  transitInsights: {
+    en: 'Active transits',
+    hi: 'सक्रिय गोचर',
+    sa: 'सक्रियगोचराः',
+    te: 'సక్రియ గోచరాలు',
+    ta: 'செயலில் கோசாரங்கள்',
+  },
+  skyWindows: {
+    en: "Today's sky windows",
+    hi: 'आज की समय खिड़कियाँ',
+    sa: 'अद्यकालखण्डाः',
+    te: 'ఈరోజు ఆకాశ విండోలు',
+    ta: 'இன்றைய வான நேரங்கள்',
+  },
+  currentChoghadiya: {
+    en: 'Current Choghadiya',
+    hi: 'वर्तमान चौघड़िया',
+    sa: 'वर्तमानचौघड़िया',
+    te: 'ప్రస్తుత చోఘడియ',
+    ta: 'தற்போதைய சோகடியா',
+  },
+  nextChoghadiya: {
+    en: 'Next Choghadiya',
+    hi: 'अगली चौघड़िया',
+    sa: 'अग्रिमचौघड़िया',
+    te: 'తదుపరి చోఘడియ',
+    ta: 'அடுத்த சோகடியா',
+  },
+  rahuKalam: {
+    en: 'Rahu Kalam',
+    hi: 'राहु काल',
+    sa: 'राहुकालः',
+    te: 'రాహు కాలం',
+    ta: 'ராகு காலம்',
+  },
+  weeklyTone: {
+    en: "This week's tone",
+    hi: 'इस सप्ताह की लय',
+    sa: 'अस्य सप्ताहस्य लयः',
+    te: 'ఈ వార స్వరం',
+    ta: 'இந்த வார நயம்',
+  },
+  chartDepthLocked: {
+    en: 'Add birth time to unlock',
+    hi: 'अनलॉक के लिए जन्म समय जोड़ें',
+    sa: 'जन्मसमयं योजयतु',
+    te: 'అన్‌లాక్ చేయడానికి జన్మ సమయం జోడించండి',
+    ta: 'திறக்க பிறப்பு நேரத்தைச் சேர்க்கவும்',
+  },
+  chartDepthLockedHint: {
+    en: 'With birth time you get lagna, houses, Navamsa, yogas, dignities, and dosha checks.',
+    hi: 'जन्म समय से लग्न, भाव, नवांश, योग और दोष मिलते हैं।',
+    sa: 'जन्मसमयेन लग्नभावनवांशयोगदोषाः।',
+    te: 'జన్మ సమయంతో లగ్నం, భావాలు, నవాంశం, యోగాలు, దోషాలు.',
+    ta: 'பிறப்பு நேரத்துடன் லக்னம், பாவங்கள், நவாம்சம், யோகங்கள், தோஷங்கள்.',
+  },
+  navamsaSummary: {
+    en: 'Navamsa (D9)',
+    hi: 'नवांश (D9)',
+    sa: 'नवांशः',
+    te: 'నవాంశం (D9)',
+    ta: 'நவாம்சம் (D9)',
+  },
+  planetDignities: {
+    en: 'Planetary dignities',
+    hi: 'ग्रह बल',
+    sa: 'ग्रहबलानि',
+    te: 'గ్రహ బలాలు',
+    ta: 'கிரக பலங்கள்',
+  },
+  chartDoshas: {
+    en: 'Dosha checks',
+    hi: 'दोष जाँच',
+    sa: 'दोषपरीक्षा',
+    te: 'దోష తనిఖీలు',
+    ta: 'தோஷ சோதனைகள்',
+  },
+  annualOutlook: {
+    en: 'Annual outlook',
+    hi: 'वार्षिक दृष्टि',
+    sa: 'वार्षिकदृष्टिः',
+    te: 'వార్షిక దృష్టి',
+    ta: 'வார்ஷிக கண்ணோட்டம்',
+  },
+  annualOutlookSubtitle: {
+    en: 'Tithi Pravesha chart near your birthday',
+    hi: 'जन्मदिन के पास तिथि प्रवेश चार्ट',
+    sa: 'जन्मदिनसमीपे तिथिप्रवेशचक्रम्',
+    te: 'పుట్టినరోజు సమీపంలో తిథి ప్రవేశ చార్ట్',
+    ta: 'பிறந்தநாள் அருகில் திதி பிரவேச சார்ட்',
+  },
+  learnGlossary: {
+    en: 'Glossary',
+    hi: 'शब्दकोश',
+    sa: 'शब्दकोशः',
+    te: 'పదకోశం',
+    ta: 'அகராதி',
+  },
+  learnArticles: {
+    en: 'How it works',
+    hi: 'यह कैसे काम करता है',
+    sa: 'कथं कार्यति',
+    te: 'ఎలా పనిచేస్తుంది',
+    ta: 'எப்படி வேலை செய்கிறது',
+  },
+  searchGlossary: {
+    en: 'Search terms…',
+    hi: 'शब्द खोजें…',
+    sa: 'पदानि अन्विष्यताम्…',
+    te: 'పదాలు వెతకండి…',
+    ta: 'சொற்களைத் தேடுங்கள்…',
+  },
+  yogaReasons: {
+    en: 'Why this yoga',
+    hi: 'यह योग क्यों',
+    sa: 'किमर्थं योगः',
+    te: 'ఈ యోగం ఎందుకు',
+    ta: 'ஏன் இந்த யோகம்',
+  },
+  yogaEffect: {
+    en: 'What it tends to mean',
+    hi: 'इसका प्रभाव',
+    sa: 'प्रभावः',
+    te: 'ప్రభావం',
+    ta: 'விளைவு',
+  },
+  yogaTechnical: {
+    en: 'How we detected this',
+    hi: 'कैसे पहचाना',
+    sa: 'कथं ज्ञातम्',
+    te: 'ఎలా గుర్తించాం',
+    ta: 'எப்படி கண்டறிந்தோம்',
+  },
+  showDetails: {
+    en: 'Show details',
+    hi: 'विवरण देखें',
+    sa: 'विवरणं दर्शयतु',
+    te: 'వివరాలు చూడండి',
+    ta: 'விவரங்களைக் காட்டு',
+  },
+  matchTitle: {
+    en: 'Kundali match',
+    hi: 'कुंडली मिलान',
+    sa: 'कुण्डलीमिलनम्',
+    te: 'కుండలి పోలిక',
+    ta: 'குண்டலி பொருத்தம்',
+  },
+  matchSubtitle: {
+    en: 'North Indian Ashtakoot (36 points) — offline, educational.',
+    hi: 'उत्तर भारतीय अष्टकूट (36) — शैक्षिक।',
+    sa: 'अष्टकूटम् — 36 अङ्काः।',
+    te: 'నార్త్ ఇండియన్ అష్టకూట్ (36) — విద్యాపరమైనది.',
+    ta: 'வட இந்திய அஷ்டகூட் (36) — கல்வி நோக்கில்.',
+  },
+  matchEmptySelf: {
+    en: 'Add your birth details to check compatibility.',
+    hi: 'मिलान के लिए अपना जन्म विवरण जोड़ें।',
+    sa: 'मिलनार्थं जन्मविवरणं योजयतु।',
+    te: 'పోలిక కోసం మీ జన్మ వివరాలు జోడించండి.',
+    ta: 'பொருத்தத்திற்கு உங்கள் பிறப்பு விவரங்களைச் சேர்க்கவும்.',
+  },
+  matchEmptyPartner: {
+    en: 'Add partner birth details to see Ashtakoot score.',
+    hi: 'अष्टकूट के लिए साथी का जन्म विवरण जोड़ें।',
+    sa: 'सहचरस्य जन्मविवरणं योजयतु।',
+    te: 'భాగస్వామి జన్మ వివరాలు జోడించండి.',
+    ta: 'துணை பிறப்பு விவரங்களைச் சேர்க்கவும்.',
+  },
+  partnerProfile: {
+    en: 'Partner profile',
+    hi: 'साथी का विवरण',
+    sa: 'सहचरविवरणम्',
+    te: 'భాగస్వామి ప్రొఫైల్',
+    ta: 'துணை சுயவிவரம்',
+  },
+  partnerName: {
+    en: 'Partner name',
+    hi: 'साथी का नाम',
+    sa: 'सहचरनाम',
+    te: 'భాగస్వామి పేరు',
+    ta: 'துணை பெயர்',
+  },
+  savePartnerProfile: {
+    en: 'Save partner profile',
+    hi: 'साथी का विवरण सहेजें',
+    sa: 'सहचरं संरक्षतु',
+    te: 'భాగస్వామి ప్రొఫైల్ సేవ్',
+    ta: 'துணை சுயவிவரத்தைச் சேமிக்கவும்',
+  },
+  clearPartnerProfile: {
+    en: 'Clear partner profile',
+    hi: 'साथी का विवरण हटाएँ',
+    sa: 'सहचरं अपाकरोतु',
+    te: 'భాగస్వామి ప్రొఫైల్ క్లియర్',
+    ta: 'துணை சுயவிவரத்தை அழிக்கவும்',
+  },
+  editPartnerDetails: {
+    en: 'Edit partner details',
+    hi: 'साथी का विवरण संपादित करें',
+    sa: 'सहचरविवरणं सम्पादयतु',
+    te: 'భాగస్వామి వివరాలు సవరించండి',
+    ta: 'துணை விவரங்களைத் திருத்தவும்',
+  },
+  matchScoreTitle: {
+    en: 'Ashtakoot score',
+    hi: 'अष्टकूट अंक',
+    sa: 'अष्टकूटाङ्कः',
+    te: 'అష్టకూట్ స్కోర్',
+    ta: 'அஷ்டகூட் மதிப்பெண்',
+  },
+  matchGunaBreakdown: {
+    en: 'Guna breakdown',
+    hi: 'गुण विवरण',
+    sa: 'गुणविभागः',
+    te: 'గుణ వివరాలు',
+    ta: 'குண விவரம்',
+  },
+  matchMangalPairing: {
+    en: 'Mangal pairing',
+    hi: 'मंगल मिलान',
+    sa: 'मङ्गलमिलनम्',
+    te: 'మంగళ పోలిక',
+    ta: 'மங்கல பொருத்தம்',
+  },
+  matchSynastry: {
+    en: 'Chart synastry',
+    hi: 'कुंडली समन्वय',
+    sa: 'चक्रसामञ्जस्यम्',
+    te: 'చార్ట్ సినాస్ట్రీ',
+    ta: 'சார்ட் சினாஸ்ட்ரி',
+  },
+  matchSynastryLocked: {
+    en: 'Birth time needed for both profiles',
+    hi: 'दोनों के जन्म समय चाहिए',
+    sa: 'उभयजन्मकालः आवश्यकः',
+    te: 'రెండు ప్రొఫైల్‌లకు జన్మ సమయం అవసరం',
+    ta: 'இரண்டு சுயவிவரங்களுக்கும் பிறப்பு நேரம் தேவை',
+  },
+  matchNadiDosha: {
+    en: 'Nadi dosha',
+    hi: 'नाड़ी दोष',
+    sa: 'नाडीदोषः',
+    te: 'నాడి దోషం',
+    ta: 'நாடி தோஷம்',
+  },
+  matchBhakootDosha: {
+    en: 'Bhakoot dosha',
+    hi: 'भकूट दोष',
+    sa: 'भकूटदोषः',
+    te: 'భకూట్ దోషం',
+    ta: 'பகூட் தோஷம்',
+  },
+  matchSelfMoon: {
+    en: 'Your Moon',
+    hi: 'आपका चन्द्र',
+    sa: 'भवतः चन्द्रः',
+    te: 'మీ చంద్రుడు',
+    ta: 'உங்கள் சந்திரன்',
+  },
+  matchPartnerMoon: {
+    en: 'Partner Moon',
+    hi: 'साथी का चन्द्र',
+    sa: 'सहचरचन्द्रः',
+    te: 'భాగస్వామి చంద్రుడు',
+    ta: 'துணை சந்திரன்',
+  },
+  matchConventionNote: {
+    en: 'Scores use classical groom-bride tables: your profile first, partner second.',
+    hi: 'क्लासिकल नियम: आप पहले, साथी दूसरे।',
+    sa: 'शास्त्रीयनियमाः — भवतः प्रथमम्।',
+    te: 'మీ ప్రొఫైల్ మొదట, భాగస్వామి రెండవ.',
+    ta: 'உங்கள் சுயவிவரம் முதலில், துணை இரண்டாவது.',
+  },
 };
 
 export function t(key: LabelKey, language: AppLanguage): string {
-  return LABELS[key][language];
+  const entry = LABELS[key];
+  if (!entry) {
+    return key;
+  }
+  return entry[language] ?? entry.en ?? key;
 }
 
 export function greeting(name: string, language: AppLanguage): string {

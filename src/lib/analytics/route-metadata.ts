@@ -11,6 +11,9 @@ export function getRouteSegment(pathname: string): string {
   if (first === 'jyotish') {
     return 'astro';
   }
+  if (first === 'match') {
+    return 'match';
+  }
   return first;
 }
 

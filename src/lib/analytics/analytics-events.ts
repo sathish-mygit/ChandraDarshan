@@ -2,10 +2,13 @@ export const ANALYTICS_EVENTS = {
   PREFERENCE_CHANGED: 'preference_changed',
   BIRTH_PROFILE_SAVED: 'birth_profile_saved',
   BIRTH_PROFILE_CLEARED: 'birth_profile_cleared',
+  PARTNER_PROFILE_SAVED: 'partner_profile_saved',
+  PARTNER_PROFILE_CLEARED: 'partner_profile_cleared',
   GLOSSARY_OPENED: 'glossary_opened',
   PAGE_DURATION: 'page_duration',
   HOME_PAGE_VISITED: 'home_page_visited',
   ASTRO_PAGE_VISITED: 'astro_page_visited',
+  MATCH_PAGE_VISITED: 'match_page_visited',
   SETTINGS_PAGE_VISITED: 'settings_page_visited',
 } as const;
 

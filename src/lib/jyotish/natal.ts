@@ -55,6 +55,7 @@ export function computeNatalSnapshot(
   return {
     ...base,
     lagna: chart.lagna.rashi.name,
+    lagnaRashiIndex: chart.lagna.rashi.index,
     lagnaNakshatra: chart.lagna.nakshatra.name,
     planets: chart.planets.map((planet) => ({
       planet: planet.planet,

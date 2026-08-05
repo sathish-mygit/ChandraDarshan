@@ -24,7 +24,20 @@ export type GlossaryTermId =
   | 'house9'
   | 'house10'
   | 'house11'
-  | 'house12';
+  | 'house12'
+  | 'transit'
+  | 'navamsa'
+  | 'dignity'
+  | 'choghadiya'
+  | 'mangalDosha'
+  | 'gochara'
+  | 'varshaphala'
+  | 'kaalSarp'
+  | 'pitruDosha'
+  | 'rahuKalam'
+  | 'ashtakoot'
+  | 'nadiDosha'
+  | 'bhakootDosha';
 
 const GLOSSARY: Record<GlossaryTermId, Record<AppLanguage, string>> = {
   chandraBalam: {
@@ -187,6 +200,97 @@ const GLOSSARY: Record<GlossaryTermId, Record<AppLanguage, string>> = {
     sa: 'द्वादशभावः आध्यात्मं, व्ययः, मोक्षः।',
     te: '12వ భావం: ఆధ్యాత్మికత, ఖర్చు, విరామం.',
     ta: '12ம் பாவம்: ஆன்மீகம், செலவு, விடுதலை.',
+  },
+  transit: {
+    en: 'A transit (gochara) is where a planet is today compared to your birth chart. Slow planets stay in a sign for months or years.',
+    hi: 'गोचर = आज ग्रह की स्थिति बनाम जन्म कुंडली।',
+    sa: 'गोचरः अद्यग्रहस्थितिः जन्मकुण्डल्याः सापेक्षम्।',
+    te: 'గోచరం = ఈరోజు గ్రహ స్థితి జన్మ కుండలితో పోల్చడం.',
+    ta: 'கோசாரம் = இன்று கிரக நிலை பிறப்பு ஜாதகத்துடன் ஒப்பிடுதல்.',
+  },
+  navamsa: {
+    en: 'Navamsa (D9) divides each sign into 9 parts. Used for deeper themes like dharma and relationships.',
+    hi: 'नवांश (D9) प्रत्येक राशि को 9 भागों में विभाजित करता है।',
+    sa: 'नवांशः नवधाविभाजनम् — धर्मविवाहविषयाः।',
+    te: 'నవాంశం (D9) ప్రతి రాశిని 9 భాగాలుగా విభజిస్తుంది.',
+    ta: 'நவாம்சம் (D9) ஒவ்வொரு ராசியையும் 9 பாகங்களாகப் பிரிக்கிறது.',
+  },
+  dignity: {
+    en: 'Planetary dignity shows how comfortably a graha expresses in a sign — exalted, own, debilitated, etc.',
+    hi: 'ग्रह बल बताता है कि ग्रह राशि में कितनी सहजता से व्यक्त होता है।',
+    sa: 'ग्रहबलं राशौ सहजताम् दर्शयति।',
+    te: 'గ్రహ బలం రాశిలో సౌకర్యాన్ని సూచిస్తుంది.',
+    ta: 'கிரக பலம் ராசியில் வசதியைக் குறிக்கிறது.',
+  },
+  choghadiya: {
+    en: 'Choghadiya divides day and night into 8 slots each, rated auspicious, inauspicious, or neutral. Rotates by weekday.',
+    hi: 'चौघड़िया दिन-रात को 8-8 भागों में बाँटती है — शुभ/अशुभ।',
+    sa: 'चौघड़िया अष्टभागविभाजनम्।',
+    te: 'చోఘడియ రోజు-రాత్రిని 8 భాగాలుగా విభజిస్తుంది.',
+    ta: 'சோகடியா பகல்-இரவை 8 பிரிவுகளாகப் பிரிக்கிறது.',
+  },
+  mangalDosha: {
+    en: 'Mangal Dosha flags Mars in houses 1,2,4,7,8,12 from Lagna, Moon, or Venus. Traditionally noted for marriage matching; many cancellations exist.',
+    hi: 'मंगल दोष — मंगल लग्न/चन्द्र/शुक्र से विशेष भावों में। विवाह मिलान में देखा जाता है।',
+    sa: 'मङ्गलदोषः — विवाहमिलनार्थम्।',
+    te: 'మంగళ దోషం — వివాహ పోలికలో చూస్తారు.',
+    ta: 'மங்கல தோஷம் — திருமண பொருத்தத்தில் பார்க்கப்படுகிறது.',
+  },
+  gochara: {
+    en: 'Gochara is the Sanskrit term for planetary transits — current sky positions relative to your birth chart.',
+    hi: 'गोचर = ग्रहों की वर्तमान स्थिति जन्म कुंडली से तुलना।',
+    sa: 'गोचरः ग्रहगतिः जन्मकुण्डल्याः सापेक्षम्।',
+    te: 'గోచరం — జన్మ కుండలికి సంబంధించి ప్రస్తుత గ్రహ స్థితులు.',
+    ta: 'கோசாரம் — பிறப்பு ஜாதகத்துடன் தொடர்புடைய தற்போதைய கிரக நிலைகள்.',
+  },
+  varshaphala: {
+    en: 'Varshaphala / Tithi Pravesha is the annual chart cast when Sun-Moon separation matches your birth tithi.',
+    hi: 'वर्षफल / तिथि प्रवेश — जन्म तिथि से मेल खाता वार्षिक चार्ट।',
+    sa: 'वर्षफलम् — तिथिप्रवेशचक्रम्।',
+    te: 'వర్షఫలం — జన్మ తిథికి సరిపోయే వార్షిక చార్ట్.',
+    ta: 'வர்ஷபலம் — பிறப்பு திதிக்கு பொருந்தும் வார்ஷிக சார்ட்.',
+  },
+  kaalSarp: {
+    en: 'Kaal Sarp Dosha occurs when all seven visible planets lie within 180° of the Rahu–Ketu axis.',
+    hi: 'काल सर्प — सात ग्रह राहु-केतु अक्ष के एक ओर।',
+    sa: 'कालसर्पदोषः — सप्तग्रहाः एकपार्श्वे।',
+    te: 'కాల సర్ప — ఏడు గ్రహాలు రాహు-కేతు అక్షం ఒక వైపు.',
+    ta: 'கால சர்ப்பம் — ஏழு கிரகங்கள் ராகு-கேது அச்சின் ஒரு பக்கம்.',
+  },
+  pitruDosha: {
+    en: 'Pitru Dosha flags ancestral-theme indicators like Sun+Rahu or Rahu in the 9th house.',
+    hi: 'पितृ दोष — पैतृक विषयों के शास्त्रीय संकेत।',
+    sa: 'पितृदोषः — पैतृकसङ्केताः।',
+    te: 'పితృ దోషం — పూర్వీక విషయ సంకేతాలు.',
+    ta: 'பித்ரு தோஷம் — மூதாதையர் தீம் குறிகாட்டிகள்.',
+  },
+  rahuKalam: {
+    en: 'Rahu Kalam is a daily inauspicious window — the 8th of 8 day-segments from sunrise, rotating by weekday.',
+    hi: 'राहु काल — दिन का 8वाँ अशुभ खंड, वार के अनुसार बदलता है।',
+    sa: 'राहुकालः — अष्टमदिवसखण्डः।',
+    te: 'రాహు కాలం — రోజు 8వ అశుభ విండో.',
+    ta: 'ராகு காலம் — பகலின் 8வது அசுப நேரம்.',
+  },
+  ashtakoot: {
+    en: 'Ashtakoot (Gun Milan) scores eight gunas from Moon rashi and nakshatra — max 36 points in North Indian matching.',
+    hi: 'अष्टकूट — आठ गुण, अधिकतम 36 अंक।',
+    sa: 'अष्टकूटम् — अष्टगुणाः, 36 अङ्काः।',
+    te: 'అష్టకూట్ — ఎనిమిది గుణాలు, 36 పాయింట్లు.',
+    ta: 'அஷ்டகூட் — எட்டு குணங்கள், 36 புள்ளிகள்.',
+  },
+  nadiDosha: {
+    en: 'Nadi dosha occurs when both charts share the same nakshatra nadi (Adi/Madhya/Antya) — traditionally reviewed in matching.',
+    hi: 'नाड़ी दोष — समान नाड़ी।',
+    sa: 'नाडीदोषः — समाननाडी।',
+    te: 'నాడి దోషం — ఒకే నాడి.',
+    ta: 'நாடி தோஷம் — ஒரே நாடி.',
+  },
+  bhakootDosha: {
+    en: 'Bhakoot dosha flags unfavorable Moon sign distances (e.g. 2/12, 5/9, 6/8) between charts.',
+    hi: 'भकूट दोष — चन्द्र राशि दूरी।',
+    sa: 'भकूटदोषः — चन्द्रराशिदूरता।',
+    te: 'భకూట్ దోషం — చంద్ర రాశి దూరం.',
+    ta: 'பகூட் தோஷம் — சந்திர ராசி தூரம்.',
   },
 };
 

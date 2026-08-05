@@ -1,4 +1,4 @@
-import { computeSadeSati } from 'panchang-ts';
+import { computePlanetaryPositions, computeSadeSati } from 'panchang-ts';
 import type { computeVimshottariDashaFromBirth } from 'panchang-ts';
 import type { AppLanguage, LifeMilestone } from '../types';
 import {
@@ -6,6 +6,8 @@ import {
   getMahaDashaLifeChapterTitle,
   getSadeSatiMilestoneDescription,
 } from '../i18n/jyotish-themes';
+import { getHouseTheme } from '../i18n/jyotish-explanations';
+import { houseFromReference } from './explained-insight';
 
 type DashaResult = ReturnType<typeof computeVimshottariDashaFromBirth>;
 
@@ -70,6 +72,55 @@ function findAllSadeSatiArcs(
   return arcs;
 }
 
+const SLOW_GRAHAS = ['Saturn', 'Jupiter'] as const;
+
+function findTransitSignChanges(
+  planet: 'Saturn' | 'Jupiter',
+  moonRashiIndex: number,
+  start: Date,
+  horizon: Date,
+): Array<{ date: Date; rashi: string; houseFromMoon: number }> {
+  const changes: Array<{ date: Date; rashi: string; houseFromMoon: number }> =
+    [];
+  let cursor = new Date(start);
+  let lastIndex = computePlanetaryPositions(cursor, 'lahiri')[
+    planet.toLowerCase() as 'saturn' | 'jupiter'
+  ].rashi.index;
+
+  while (cursor < horizon) {
+    cursor = new Date(cursor.getTime() + 7 * 86_400_000);
+    const pos = computePlanetaryPositions(cursor, 'lahiri')[
+      planet.toLowerCase() as 'saturn' | 'jupiter'
+    ];
+    if (pos.rashi.index !== lastIndex) {
+      changes.push({
+        date: new Date(cursor),
+        rashi: pos.rashi.name,
+        houseFromMoon: houseFromReference(moonRashiIndex, pos.rashi.index),
+      });
+      lastIndex = pos.rashi.index;
+    }
+  }
+
+  return changes;
+}
+
+function transitMilestoneTitle(
+  planet: string,
+  rashi: string,
+  house: number,
+  language: AppLanguage,
+): string {
+  const templates: Record<AppLanguage, string> = {
+    en: `${planet} enters ${rashi} (${house}th from Moon)`,
+    hi: `${planet} ${rashi} में (${house}वाँ चन्द्र से)`,
+    sa: `${planet} ${rashi}राशौ (${house}भावः)`,
+    te: `${planet} ${rashi}లోకి (${house}వ చంద్రం నుండి)`,
+    ta: `${planet} ${rashi} க்கு (${house}ம் சந்திரத்திலிருந்து)`,
+  };
+  return templates[language];
+}
+
 export function buildLifeMilestones(
   dasha: DashaResult,
   birth: Date,
@@ -79,9 +130,12 @@ export function buildLifeMilestones(
 ): LifeMilestone[] {
   const now = new Date();
   const horizon = new Date(birth);
-  horizon.setFullYear(horizon.getFullYear() + 100);
+  horizon.setFullYear(horizon.getFullYear() + 30);
 
-  type RawMilestone = Omit<LifeMilestone, 'date' | 'endDate' | 'ageLabel'> & {
+  type RawMilestone = Omit<
+    LifeMilestone,
+    'date' | 'endDate' | 'ageLabel'
+  > & {
     start: Date;
     end?: Date;
   };
@@ -114,6 +168,33 @@ export function buildLifeMilestones(
       isPast: now >= arc.end,
       isCurrent: now >= arc.start && now < arc.end,
     });
+  }
+
+  for (const planet of SLOW_GRAHAS) {
+    const kind =
+      planet === 'Jupiter' ? 'jupiterTransit' : 'saturnTransit';
+    for (const change of findTransitSignChanges(
+      planet,
+      moonRashiIndex,
+      birth,
+      horizon,
+    )) {
+      const theme = getHouseTheme(change.houseFromMoon, language);
+      raw.push({
+        kind,
+        start: change.date,
+        title: transitMilestoneTitle(
+          planet,
+          change.rashi,
+          change.houseFromMoon,
+          language,
+        ),
+        description: `Traditions link the ${change.houseFromMoon}th house to ${theme}.`,
+        how: `We detect when ${planet} changes sidereal sign and count houses from your birth Moon.`,
+        isPast: now >= change.date,
+        isCurrent: false,
+      });
+    }
   }
 
   raw.sort((a, b) => a.start.getTime() - b.start.getTime());

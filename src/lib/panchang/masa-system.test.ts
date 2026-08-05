@@ -39,6 +39,16 @@ describe('resolveMasaSystem', () => {
     expect(resolveMasaSystem('auto', cityToLocation(delhi!))).toBe('purnimanta');
   });
 
+  it('uses approx-mapped preset city metadata in auto mode', () => {
+    const chennai = CITIES.find((city) => city.id === 'chennai');
+    expect(
+      resolveMasaSystem('auto', {
+        ...cityToLocation(chennai!),
+        source: 'approx',
+      }),
+    ).toBe('amanta');
+  });
+
   it('uses nearby preset city for GPS locations', () => {
     expect(
       resolveMasaSystem('auto', {

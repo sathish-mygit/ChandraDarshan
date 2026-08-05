@@ -8,6 +8,9 @@ export function resolvePageVisitedEvent(pathname: string): string | null {
   if (path.startsWith('/jyotish')) {
     return ANALYTICS_EVENTS.ASTRO_PAGE_VISITED;
   }
+  if (path.startsWith('/match')) {
+    return ANALYTICS_EVENTS.MATCH_PAGE_VISITED;
+  }
   if (path.startsWith('/settings')) {
     return ANALYTICS_EVENTS.SETTINGS_PAGE_VISITED;
   }

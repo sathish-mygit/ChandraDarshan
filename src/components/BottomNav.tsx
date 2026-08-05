@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { CalendarDays, Settings, Sparkles } from 'lucide-react';
+import { CalendarDays, Heart, Settings, Sparkles } from 'lucide-react';
 import { t } from '@/lib/i18n/labels';
 import { useAppPreferences } from '@/contexts/AppPreferencesContext';
 import { cn } from '@/lib/utils';
@@ -19,6 +19,12 @@ const TABS = [
     labelKey: 'tabJyotish' as const,
     icon: Sparkles,
     isActive: (pathname: string) => pathname.startsWith('/jyotish'),
+  },
+  {
+    href: '/match/',
+    labelKey: 'tabMatch' as const,
+    icon: Heart,
+    isActive: (pathname: string) => pathname.startsWith('/match'),
   },
   {
     href: '/settings/',
