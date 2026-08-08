@@ -7,9 +7,9 @@ Production telemetry for Chandra Darshan: **Firebase Analytics** (page views, cu
 | Included | Not included |
 |----------|----------------|
 | Prod Firebase project + `google-services.json` | Dev/staging Firebase project |
-| Page / screen tracking | Firebase Auth |
-| Custom preference and Jyotish events | App Check |
-| Page visit events (`home_page_visited`, `astro_page_visited`, `settings_page_visited`) | |
+| Page / screen tracking (routes + Jyotish sub-tabs) | Firebase Auth |
+| Custom preference, Jyotish, Match, and navigation events | App Check |
+| Page visit + duration events | |
 | Crashlytics on native Android | |
 
 ## Prerequisites
@@ -30,110 +30,91 @@ Production telemetry for Chandra Darshan: **Firebase Analytics** (page views, cu
    android/app/src/prod/google-services.json
    ```
 
-   This file is committed in the repo (prod flavor only).
+6. Rebuild: `npm run build:android:prod`
 
-6. Rebuild so Gradle applies the Google Services and Crashlytics plugins:
-
-   ```bash
-   npm run build:android:prod
-   ```
-
-   Until this file exists, Android builds still succeed — Firebase Gradle plugins are skipped.
-
-   When the prod file exists, **dev** flavor builds still work: Gradle skips `processDev*GoogleServices` (dev is not registered in Firebase).
+Automatic Android `MainActivity` screen reporting is **disabled** in `AndroidManifest.xml` so only manual `screen_view` events are logged (required for Capacitor WebView apps).
 
 ## 2. Web / JS Firebase config
 
-Copy the Firebase **web app** config into `.env.production` (or `.env.local` for machine-only overrides):
-
-```env
-NEXT_PUBLIC_FIREBASE_API_KEY=...
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=...
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=...
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=...
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
-NEXT_PUBLIC_FIREBASE_APP_ID=...
-NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=...
-```
-
-When ready to collect telemetry on prod builds:
+Copy the Firebase **web app** config into `.env.production`:
 
 ```env
 NEXT_PUBLIC_ANALYTICS_ENABLED=true
+NEXT_PUBLIC_FIREBASE_API_KEY=...
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=...
 ```
 
 **Dev builds** (`.env.development`) keep `NEXT_PUBLIC_ANALYTICS_ENABLED=false`.
 
-## 3. Build and env flow
+## 3. What gets tracked
 
-```text
-main branch + CAPACITOR_FLAVOR=prod
-    → apply-build-env loads .env.production
-    → NEXT_PUBLIC_ANALYTICS_ENABLED baked into out/
-    → cap sync → prodRelease APK/AAB with google-services.json
-```
+### Screen and time
 
-Dev branch builds load `.env.development` and never send events.
+| Mechanism | When | Notes |
+|-----------|------|-------|
+| `screen_view` | Route or Jyotish sub-tab change | Native: `setCurrentScreen`; web: `logEvent` |
+| `page_duration` | Leave screen (>500 ms) | Custom event with `page_name`, `duration_seconds` |
+| `*_page_visited` | Top-level tab entry only | Home, Astro (`/jyotish`), Match, Settings |
 
-## 4. What gets tracked
+**Virtual Astro screens** (tracked by `JyotishClient`, not URL routes):
 
-### Automatic
+- `/jyotish` — onboarding (no birth profile)
+- `/jyotish/today`, `/jyotish/chart`, `/jyotish/timeline`, `/jyotish/learn`
 
-| Event | Source |
-|-------|--------|
-| `screen_view` | `AnalyticsTracker` on route change |
-| `page_duration` | Time on previous page (>500 ms) |
-| Unhandled errors | `AppTelemetry` → Crashlytics (native) or Analytics `exception` (web) |
+`screen_view` uses `screen_name` = normalized path and `screen_class` = `route_segment` (`home`, `astro`, `match`, `settings`).
 
-### Custom (no PII)
+### User actions (no PII)
 
 | Event | When | Params |
 |-------|------|--------|
-| `preference_changed` | Language, maasa, or location update | `setting`, `value` (enum / `city` \| `gps`) |
-| `birth_profile_saved` | Birth profile saved | `has_birth_time` |
-| `birth_profile_cleared` | Birth profile removed | — |
+| `preference_changed` | Language, masa, location, reminder | `setting`, `value` |
+| `birth_profile_saved` / `birth_profile_cleared` | Birth profile changes | `has_birth_time` |
+| `partner_profile_saved` / `partner_profile_cleared` | Partner profile changes | `has_birth_time` |
 | `glossary_opened` | Glossary tooltip opened | `term_id` |
-| `home_page_visited` | User navigates to Today / home | `route_path` |
-| `astro_page_visited` | User navigates to Astro tab (`/jyotish/`) | `route_path` |
-| `settings_page_visited` | User navigates to Settings | `route_path` |
+| `nav_tapped` | Bottom nav tap | `destination` |
+| `panchang_refreshed` | Panchang retry on home | — |
+| `insight_expanded` | Insight card toggled | `insight_key`, `expanded` |
+| `match_viewed` | Match results shown | `quality_band`, dosha flags, `synastry_unlocked` |
+| `birth_edit_opened` | Edit birth/partner form opened | `variant` |
+| `learn_search_used` | Glossary search (debounced) | `query_length` |
+| `learn_article_viewed` | Learn article rendered | `article_id` |
+| `gps_location_used` | GPS location button | `result` |
 
-`screen_view` uses `route_segment: astro` for the Astro tab (URL remains `/jyotish/`).
+Never logged: birth date/time, coordinates, names, city labels, or search query text.
 
-User properties (segmentation): `app_language`, `masa_system`, `has_birth_profile`, `location_source`, `platform`.
+### User properties
 
-Never logged: birth date/time, coordinates, names, or city labels.
+`app_language`, `masa_system`, `has_birth_profile`, `location_source`, `platform`
+
+### Ads (separate module)
+
+`ad_requested`, `ad_loaded`, `ad_impression`, `ad_clicked`, `ad_skipped`, and related `ad_*` events — see [AdMob setup](03-admob.md).
+
+## 4. GA4 Console checklist (manual)
+
+Register these as **custom dimensions** in Admin → Custom definitions:
+
+| Parameter | Scope |
+|-----------|-------|
+| `route_segment` | Event |
+| `duration_seconds` | Event |
+| `destination` | Event |
+| `insight_key` | Event |
+| `quality_band` | Event |
+| `article_id` | Event |
 
 ## 5. Verify
-
-### Dev build (telemetry off)
-
-```bash
-npm run build:android:dev
-```
-
-Build log should show: `Analytics: disabled`.
-
-### Prod build (after Firebase config)
-
-```bash
-npm run build:android:prod
-```
-
-Build log should show: `Analytics: enabled` when `NEXT_PUBLIC_ANALYTICS_ENABLED=true`.
-
-On device:
 
 ```powershell
 adb shell setprop debug.firebase.analytics.app com.sathish.utilites.chandra_darshan
 ```
 
-Open the app, navigate **Today → Jyotish → Settings**. Check **Firebase Console → Analytics → DebugView** for `screen_view` and `preference_changed`.
+Navigate **Today → Astro (switch tabs) → Match → Settings**. In Firebase **DebugView** confirm:
 
-Crashlytics: open **Settings** on a prod debug APK with analytics enabled. Tap **Test fatal crash** once to enable Crashlytics in Console (app will close). Use **Test non-fatal error** to verify reporting without killing the app. Reports appear within ~15 minutes.
-
-**Note:** Set `NEXT_PUBLIC_ANALYTICS_ENABLED=true` in `.env.production` (or your prod debug env) before building so Crashlytics initializes.
-
-### Typecheck / lint
+- `screen_view` per route and Jyotish sub-tab
+- `page_duration` when leaving screens
+- `nav_tapped`, `match_viewed` (when match data loads)
+- No spurious `MainActivity`-only `screen_view`
 
 ```bash
 npm run typecheck
@@ -144,26 +125,15 @@ npm run lint
 
 | File | Role |
 |------|------|
-| `src/config/analytics.ts` | `isAnalyticsEnabled()` gate |
-| `src/lib/firebase/client.ts` | Minimal Firebase init for web Analytics |
-| `src/lib/analytics/analytics.service.ts` | Native + web event bridge |
-| `src/lib/analytics/crashlytics.service.ts` | Native Crashlytics + web exception events |
-| `src/components/CrashlyticsTestPanel.tsx` | Settings buttons for fatal / non-fatal Crashlytics tests |
-| `src/components/AnalyticsTracker.tsx` | Route tracking |
-| `src/components/AppTelemetry.tsx` | Build metadata, user properties, global errors |
-| `capacitor.config.ts` | `FirebaseAnalytics.enabled` at build time |
-| `android/app/build.gradle` | Conditional `google-services` + Crashlytics plugins |
-
-## Troubleshooting
-
-| Symptom | Fix |
-|---------|-----|
-| No events in DebugView | Confirm `NEXT_PUBLIC_ANALYTICS_ENABLED=true` in prod env; full `npm run build`, not Studio-only Run |
-| Gradle fails on google-services | Package in json must match `com.sathish.utilites.chandra_darshan`; dev flavor should skip processing automatically — rebuild after pulling latest `android/app/build.gradle` |
-| Crashlytics empty | Enable Crashlytics in Console; use prod flavor with `google-services.json` |
-| Events in dev APK | Expected if flag is true — use dev env with `ANALYTICS_ENABLED=false` |
+| `src/lib/analytics/analytics.service.ts` | Native `setCurrentScreen` + web `screen_view` |
+| `src/lib/analytics/route-metadata.ts` | Path normalization and screen titles |
+| `src/hooks/useScreenTracking.ts` | Screen + duration tracking hook |
+| `src/components/AnalyticsTracker.tsx` | Top-level route tracking |
+| `src/app/jyotish/JyotishClient.tsx` | Astro sub-tab virtual screens |
+| `src/lib/analytics/app-analytics.ts` | User-action event helpers |
+| `android/app/src/main/AndroidManifest.xml` | Disables auto Activity screen reporting |
 
 ## Related
 
+- [AdMob setup](03-admob.md)
 - [Android build pipeline](04-android-build.md)
-- Agent skill: [`.cursor/skills/android-build-pipeline/SKILL.md`](../../.cursor/skills/android-build-pipeline/SKILL.md)

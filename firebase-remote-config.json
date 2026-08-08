@@ -10,6 +10,11 @@
       "description": "Show interstitial when navigating to Astro tab",
       "valueType": "BOOLEAN"
     },
+    "interstitial_toMatch": {
+      "defaultValue": { "value": "true" },
+      "description": "Show interstitial when navigating to Match tab",
+      "valueType": "BOOLEAN"
+    },
     "interstitial_toHome": {
       "defaultValue": { "value": "false" },
       "description": "Home fallback interstitial when Astro not visited this session",
@@ -90,6 +95,16 @@
       "description": "Astro nav interstitial max per day",
       "valueType": "STRING"
     },
+    "freqCap_interstitial_toMatch_perHour": {
+      "defaultValue": { "value": "1" },
+      "description": "Match nav interstitial max per hour",
+      "valueType": "STRING"
+    },
+    "freqCap_interstitial_toMatch_perDay": {
+      "defaultValue": { "value": "3" },
+      "description": "Match nav interstitial max per day",
+      "valueType": "STRING"
+    },
     "freqCap_interstitial_toHome_perDay": {
       "defaultValue": { "value": "2" },
       "description": "Home fallback interstitial max per day",
@@ -112,6 +127,6 @@
     }
   },
   "version": {
-    "versionNumber": "2"
+    "versionNumber": "3"
   }
 }

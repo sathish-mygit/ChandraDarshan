@@ -1,7 +1,11 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { LearnTooltip } from '@/components/LearnTooltip';
+import {
+  trackLearnArticleViewed,
+  trackLearnSearchUsed,
+} from '@/lib/analytics';
 import {
   getGlossaryTerm,
   type GlossaryTermId,
@@ -53,6 +57,40 @@ type JyotishLearnTabProps = {
   timeUnknown: boolean;
 };
 
+function LearnArticleCard({
+  id,
+  language,
+}: {
+  id: LearnArticleId;
+  language: AppLanguage;
+}) {
+  const useDevanagari = language === 'hi' || language === 'sa';
+  const article = LEARN_ARTICLES[id][language];
+  const trackedRef = useRef(false);
+
+  useEffect(() => {
+    if (trackedRef.current) {
+      return;
+    }
+    trackedRef.current = true;
+    trackLearnArticleViewed(id);
+  }, [id]);
+
+  return (
+    <div className="rounded-lg bg-slate-900/40 px-3 py-2.5">
+      <h4 className="text-sm font-medium text-amber-100">{article.title}</h4>
+      <p
+        className={cn(
+          'mt-1 text-xs leading-relaxed text-slate-400',
+          useDevanagari && 'font-devanagari',
+        )}
+      >
+        {article.body}
+      </p>
+    </div>
+  );
+}
+
 export function JyotishLearnTab({
   language,
   timeUnknown,
@@ -70,6 +108,19 @@ export function JyotishLearnTab({
       return id.toLowerCase().includes(q) || text.includes(q);
     });
   }, [query, language]);
+
+  useEffect(() => {
+    const trimmed = query.trim();
+    if (!trimmed) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      trackLearnSearchUsed(trimmed.length);
+    }, 500);
+
+    return () => window.clearTimeout(timer);
+  }, [query]);
 
   return (
     <div className="space-y-6">
@@ -89,27 +140,9 @@ export function JyotishLearnTab({
           {t('learnArticles', language)}
         </h3>
         <div className="space-y-3">
-          {ARTICLE_IDS.map((id) => {
-            const article = LEARN_ARTICLES[id][language];
-            return (
-              <div
-                key={id}
-                className="rounded-lg bg-slate-900/40 px-3 py-2.5"
-              >
-                <h4 className="text-sm font-medium text-amber-100">
-                  {article.title}
-                </h4>
-                <p
-                  className={cn(
-                    'mt-1 text-xs leading-relaxed text-slate-400',
-                    useDevanagari && 'font-devanagari',
-                  )}
-                >
-                  {article.body}
-                </p>
-              </div>
-            );
-          })}
+          {ARTICLE_IDS.map((id) => (
+            <LearnArticleCard key={id} id={id} language={language} />
+          ))}
         </div>
       </section>
 

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { LearnTooltip } from '@/components/LearnTooltip';
+import { trackInsightExpanded } from '@/lib/analytics';
 import { getExplainedLabel } from '@/lib/i18n/jyotish-explanations';
 import type { GlossaryTermId } from '@/lib/i18n/glossary';
 import type { AppLanguage, ExplainedInsight } from '@/lib/types';
@@ -12,6 +13,7 @@ type ExplainedInsightCardProps = {
   insight: ExplainedInsight;
   language: AppLanguage;
   defaultExpanded?: boolean;
+  analyticsKey?: string;
 };
 
 function Section({
@@ -45,15 +47,26 @@ export function ExplainedInsightCard({
   insight,
   language,
   defaultExpanded = false,
+  analyticsKey,
 }: ExplainedInsightCardProps) {
   const [expanded, setExpanded] = useState(defaultExpanded);
   const useDevanagari = language === 'hi' || language === 'sa';
+
+  function handleToggle() {
+    setExpanded((value) => {
+      const nextExpanded = !value;
+      if (analyticsKey) {
+        trackInsightExpanded(analyticsKey, nextExpanded);
+      }
+      return nextExpanded;
+    });
+  }
 
   return (
     <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-3">
       <button
         type="button"
-        onClick={() => setExpanded((value) => !value)}
+        onClick={handleToggle}
         className="flex w-full items-start justify-between gap-3 text-left"
       >
         <div className="flex-1">

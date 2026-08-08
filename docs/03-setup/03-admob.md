@@ -1,6 +1,6 @@
 # AdMob interstitials + Meta mediation (native Android)
 
-Navigation interstitials for the **Astro** tab (`/jyotish/`) with optional Home/Settings fallback placements. Ads may fill from **Google AdMob** and **Meta Audience Network** (via AdMob mediation). Runtime toggles and caps are controlled via **Firebase Remote Config**.
+Navigation interstitials for the **Astro** tab (`/jyotish/`) and **Match** tab (`/match/`), with optional Home/Settings fallback placements. Ads may fill from **Google AdMob** and **Meta Audience Network** (via AdMob mediation). Runtime toggles and caps are controlled via **Firebase Remote Config**.
 
 ## Prerequisites
 
@@ -88,6 +88,7 @@ firebase deploy --only remoteconfig
 |--------|--------|
 | `ads_master` | Global kill switch |
 | `interstitial_toJyotish` | Astro tab navigation interstitial |
+| `interstitial_toMatch` | Match tab navigation interstitial |
 | `interstitial_toHome` / `interstitial_toSettings` | Fallback placements |
 | `ads_fallback_when_no_jyotish` | Enable fallback when Astro not visited this session |
 | `ads_fallback_home` / `ads_fallback_settings` | Per-route fallback toggles |
@@ -100,7 +101,7 @@ RC values override `src/config/ads.ts` defaults at runtime on native.
 
 ## Behavior
 
-- **Primary:** navigating to `/jyotish/` → `interstitial.toJyotish` after IVT delay.
+- **Primary:** navigating to `/jyotish/` → `interstitial.toJyotish`; navigating to `/match/` → `interstitial.toMatch` (after IVT delay).
 - **Fallback:** when RC enables fallback and user has **not** opened Astro this session, Home or Settings navigation can show their placements.
 - Central hook: [`AdNavigationBridge.tsx`](../../src/components/AdNavigationBridge.tsx) + [`placement-resolver.ts`](../../src/lib/ads/placement-resolver.ts).
 - Init: [`AppLifecycleManager.tsx`](../../src/components/AppLifecycleManager.tsx) fetches RC then `adService.init()`.

@@ -6,6 +6,7 @@ import type { AdFormat } from '@/lib/ads/core/types';
 export const Placement = {
   ADS_MASTER: 'ads.master',
   INTERSTITIAL_TO_JYOTISH: 'interstitial.toJyotish',
+  INTERSTITIAL_TO_MATCH: 'interstitial.toMatch',
   INTERSTITIAL_TO_HOME: 'interstitial.toHome',
   INTERSTITIAL_TO_SETTINGS: 'interstitial.toSettings',
 } as const;
@@ -38,6 +39,14 @@ export const PLACEMENT_CATALOG: PlacementCatalogEntry[] = [
     key: Placement.INTERSTITIAL_TO_JYOTISH,
     label: 'Astro Navigation Interstitial',
     description: 'Full-screen interstitial when navigating to Astro tab',
+    format: 'interstitial',
+    group: 'interstitial',
+    defaultEnabled: false,
+  },
+  {
+    key: Placement.INTERSTITIAL_TO_MATCH,
+    label: 'Match Navigation Interstitial',
+    description: 'Full-screen interstitial when navigating to Match tab',
     format: 'interstitial',
     group: 'interstitial',
     defaultEnabled: false,

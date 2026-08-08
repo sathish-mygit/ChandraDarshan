@@ -4,6 +4,7 @@ import { Placement } from './placements';
 
 export const DEFAULT_PLACEMENT_FREQ_CAP: FrequencyCapMap = {
   [Placement.INTERSTITIAL_TO_JYOTISH]: { perHour: 1, perDay: 3 },
+  [Placement.INTERSTITIAL_TO_MATCH]: { perHour: 1, perDay: 3 },
   [Placement.INTERSTITIAL_TO_HOME]: { perHour: 1, perDay: 2 },
   [Placement.INTERSTITIAL_TO_SETTINGS]: { perHour: 1, perDay: 2 },
 };
@@ -17,6 +18,7 @@ export const PLACEMENT_FIREBASE_RC_KEY_MAP: Record<string, string> = {
   ...APP_FIREBASE_RC_KEY_MAP,
   ads_master: 'ads.master',
   interstitial_toJyotish: 'interstitial.toJyotish',
+  interstitial_toMatch: 'interstitial.toMatch',
   interstitial_toHome: 'interstitial.toHome',
   interstitial_toSettings: 'interstitial.toSettings',
   ads_fallback_when_no_jyotish: 'fallbackAds.enableWhenJyotishNotVisited',
@@ -27,6 +29,8 @@ export const PLACEMENT_FIREBASE_RC_KEY_MAP: Record<string, string> = {
 export const PLACEMENT_IVT_RC_KEY_MAP: Record<string, string> = {
   freqCap_interstitial_toJyotish_perHour: 'freqCap.interstitial.toJyotish.perHour',
   freqCap_interstitial_toJyotish_perDay: 'freqCap.interstitial.toJyotish.perDay',
+  freqCap_interstitial_toMatch_perHour: 'freqCap.interstitial.toMatch.perHour',
+  freqCap_interstitial_toMatch_perDay: 'freqCap.interstitial.toMatch.perDay',
   freqCap_interstitial_toHome_perDay: 'freqCap.interstitial.toHome.perDay',
   freqCap_interstitial_toSettings_perDay: 'freqCap.interstitial.toSettings.perDay',
   ivt_enabled: 'ivt.enabled',
@@ -39,6 +43,7 @@ export const PLACEMENT_IVT_RC_KEY_MAP: Record<string, string> = {
 export const PLACEMENT_FREQ_CAP_ROUTING: FreqCapRemoteRouting = {
   freqCapPlacementKeys: {
     'freqCap.interstitial.toJyotish': Placement.INTERSTITIAL_TO_JYOTISH,
+    'freqCap.interstitial.toMatch': Placement.INTERSTITIAL_TO_MATCH,
     'freqCap.interstitial.toHome': Placement.INTERSTITIAL_TO_HOME,
     'freqCap.interstitial.toSettings': Placement.INTERSTITIAL_TO_SETTINGS,
   },

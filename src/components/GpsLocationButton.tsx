@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { MapPin } from 'lucide-react';
+import { trackGpsLocationUsed } from '@/lib/analytics';
 import { t } from '@/lib/i18n/labels';
 import { LocationError, resolveGpsLocation } from '@/lib/location';
 import type { AppLanguage, StoredLocation } from '@/lib/types';
@@ -24,8 +25,14 @@ export function GpsLocationButton({
     setIsLoading(true);
     try {
       const location = await resolveGpsLocation();
+      trackGpsLocationUsed('success');
       onSuccess(location);
     } catch (error) {
+      if (error instanceof LocationError && error.message === 'Location permission denied') {
+        trackGpsLocationUsed('denied');
+      } else {
+        trackGpsLocationUsed('error');
+      }
       const message =
         error instanceof LocationError
           ? error.message

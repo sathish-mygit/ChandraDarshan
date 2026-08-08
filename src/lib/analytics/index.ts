@@ -8,6 +8,23 @@ export {
   glossaryOpenedParams,
   preferenceChangedParams,
 } from '@/lib/analytics/analytics-events';
+export {
+  trackBirthEditOpened,
+  trackGpsLocationUsed,
+  trackInsightExpanded,
+  trackLearnArticleViewed,
+  trackLearnSearchUsed,
+  trackMatchViewed,
+  trackNavTapped,
+  trackPanchangRefreshed,
+} from '@/lib/analytics/app-analytics';
+export {
+  getRouteMetadata,
+  getRouteSegment,
+  getScreenTitle,
+  normalizeScreenPath,
+  resolveTopLevelScreen,
+} from '@/lib/analytics/route-metadata';
 
 export function logEvent(
   name: string,

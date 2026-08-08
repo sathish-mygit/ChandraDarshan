@@ -1,61 +1,14 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
-import { analyticsService } from '@/lib/analytics/analytics.service';
-import { ANALYTICS_EVENTS } from '@/lib/analytics/analytics-events';
-import {
-  pageVisitedEventParams,
-  resolvePageVisitedEvent,
-} from '@/lib/analytics/page-visit-events';
-
-function logPageVisited(pathname: string): void {
-  const visitEvent = resolvePageVisitedEvent(pathname);
-  if (visitEvent) {
-    void analyticsService.logEvent(visitEvent, pageVisitedEventParams(pathname));
-  }
-}
+import { resolveTopLevelScreen } from '@/lib/analytics/route-metadata';
+import { useScreenTracking } from '@/hooks/useScreenTracking';
 
 export function AnalyticsTracker() {
   const pathname = usePathname();
-  const previousPathnameRef = useRef<string | null>(null);
-  const pageStartTimeRef = useRef<number>(0);
-  const isInitializedRef = useRef(false);
+  const screenId = resolveTopLevelScreen(pathname);
 
-  useEffect(() => {
-    if (pageStartTimeRef.current === 0) {
-      pageStartTimeRef.current = Date.now();
-    }
-
-    const currentTime = Date.now();
-
-    if (!isInitializedRef.current) {
-      void analyticsService.logPageView(pathname);
-      logPageVisited(pathname);
-      previousPathnameRef.current = pathname;
-      pageStartTimeRef.current = currentTime;
-      isInitializedRef.current = true;
-      return;
-    }
-
-    if (pathname !== previousPathnameRef.current) {
-      const timeOnPreviousPage = currentTime - pageStartTimeRef.current;
-      const previousPath = previousPathnameRef.current;
-
-      if (previousPath && timeOnPreviousPage > 500) {
-        void analyticsService.logEvent(ANALYTICS_EVENTS.PAGE_DURATION, {
-          page_name: previousPath,
-          duration_ms: timeOnPreviousPage,
-          duration_seconds: Math.round(timeOnPreviousPage / 1000),
-        });
-      }
-
-      void analyticsService.logPageView(pathname);
-      logPageVisited(pathname);
-      previousPathnameRef.current = pathname;
-      pageStartTimeRef.current = currentTime;
-    }
-  }, [pathname]);
+  useScreenTracking(screenId);
 
   return null;
 }
