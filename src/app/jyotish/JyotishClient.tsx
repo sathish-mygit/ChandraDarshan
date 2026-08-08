@@ -12,11 +12,13 @@ import {
 import { JyotishTimelineTab } from '@/components/JyotishTimelineTab';
 import { JyotishTodayTab } from '@/components/JyotishTodayTab';
 import { useAppPreferences } from '@/contexts/AppPreferencesContext';
+import { useScreenTracking } from '@/hooks/useScreenTracking';
 import { useAnnualOutlook } from '@/hooks/useAnnualOutlook';
 import { useChartDepth } from '@/hooks/useChartDepth';
 import { useLifeDirection } from '@/hooks/useLifeDirection';
 import { useNatalChart } from '@/hooks/useNatalChart';
 import { usePersonalToday } from '@/hooks/usePersonalToday';
+import { trackBirthEditOpened } from '@/lib/analytics';
 import { t } from '@/lib/i18n/labels';
 import type { BirthProfile } from '@/lib/types';
 
@@ -37,6 +39,9 @@ export function JyotishClient() {
     usePersonalToday();
   const [activeTab, setActiveTab] = useState<JyotishTabId>('today');
   const [showEdit, setShowEdit] = useState(!birthProfile);
+  const screenId = birthProfile ? `/jyotish/${activeTab}` : '/jyotish';
+
+  useScreenTracking(screenId);
 
   async function handleSave(profile: BirthProfile) {
     await updateBirthProfile(profile);
@@ -137,7 +142,14 @@ export function JyotishClient() {
             <section className="rounded-2xl border border-slate-800 bg-card/60 p-5">
               <button
                 type="button"
-                onClick={() => setShowEdit((value) => !value)}
+                onClick={() =>
+                  setShowEdit((value) => {
+                    if (!value) {
+                      trackBirthEditOpened('self');
+                    }
+                    return !value;
+                  })
+                }
                 className="text-sm font-medium text-amber-300 hover:text-amber-200"
               >
                 {t('editBirthDetails', language)}

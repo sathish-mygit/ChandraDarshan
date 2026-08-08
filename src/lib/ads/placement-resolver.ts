@@ -10,14 +10,29 @@ function normalizeRoute(route: string): string {
   return route.endsWith('/') ? route : `${route}/`;
 }
 
-export function resolveNavInterstitialPlacement(toRoute: string): string | null {
-  const route = normalizeRoute(toRoute);
-
+function resolvePrimaryPlacement(route: string): string | null {
   if (route === '/jyotish/' || route.startsWith('/jyotish/')) {
     markJyotishVisited();
     return adService.isPlacementEnabled(Placement.INTERSTITIAL_TO_JYOTISH)
       ? Placement.INTERSTITIAL_TO_JYOTISH
       : null;
+  }
+
+  if (route === '/match/' || route.startsWith('/match/')) {
+    return adService.isPlacementEnabled(Placement.INTERSTITIAL_TO_MATCH)
+      ? Placement.INTERSTITIAL_TO_MATCH
+      : null;
+  }
+
+  return null;
+}
+
+export function resolveNavInterstitialPlacement(toRoute: string): string | null {
+  const route = normalizeRoute(toRoute);
+
+  const primaryPlacement = resolvePrimaryPlacement(route);
+  if (primaryPlacement) {
+    return primaryPlacement;
   }
 
   const fallbackAds = adService.getRuntimeConfig().fallbackAds ?? {};

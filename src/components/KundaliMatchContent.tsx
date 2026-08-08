@@ -31,6 +31,7 @@ export function KundaliMatchContent({
           insight={data.summaryInsight}
           language={language}
           defaultExpanded
+          analyticsKey="match_summary"
         />
         {(data.nadiDosha || data.bhakootDosha) && (
           <div className="mt-3 flex flex-wrap gap-2">
@@ -58,6 +59,7 @@ export function KundaliMatchContent({
               key={guna.id}
               insight={guna.insight}
               language={language}
+              analyticsKey={`guna_${guna.id}`}
             />
           ))}
         </div>
@@ -71,6 +73,7 @@ export function KundaliMatchContent({
           insight={data.mangalPairing.insight}
           language={language}
           defaultExpanded
+          analyticsKey="match_mangal_pairing"
         />
       </section>
 
@@ -85,6 +88,7 @@ export function KundaliMatchContent({
                 key={`${insight.title}-${index}`}
                 insight={insight}
                 language={language}
+                analyticsKey={`match_synastry_${index}`}
               />
             ))}
           </div>

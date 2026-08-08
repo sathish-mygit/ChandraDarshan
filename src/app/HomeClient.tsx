@@ -16,6 +16,8 @@ import { usePanchangToday } from '@/hooks/usePanchangToday';
 
 import { usePersonalToday } from '@/hooks/usePersonalToday';
 
+import { trackPanchangRefreshed } from '@/lib/analytics';
+
 import { t } from '@/lib/i18n/labels';
 
 import { getScriptFontClass } from '@/lib/i18n/locale';
@@ -212,7 +214,10 @@ export function HomeClient() {
 
               type="button"
 
-              onClick={() => void refresh()}
+              onClick={() => {
+                trackPanchangRefreshed();
+                void refresh();
+              }}
 
               className="text-amber-400 hover:text-amber-300"
 

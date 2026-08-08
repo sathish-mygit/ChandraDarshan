@@ -2,7 +2,11 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useAppPreferences } from '@/contexts/AppPreferencesContext';
-import { fetchTodayPanchang } from '@/lib/panchang/service';
+import {
+  fetchTodayPanchang,
+  getNextPanchangTransitionMs,
+  resolveLivePanchang,
+} from '@/lib/panchang/service';
 import type { PanchangViewModel } from '@/lib/types';
 
 type UsePanchangTodayResult = {
@@ -11,6 +15,8 @@ type UsePanchangTodayResult = {
   error: string | null;
   refresh: () => Promise<void>;
 };
+
+const LIVE_REFRESH_INTERVAL_MS = 60_000;
 
 export function usePanchangToday(): UsePanchangTodayResult {
   const { preferences, isLoading: prefsLoading } = useAppPreferences();
@@ -57,6 +63,37 @@ export function usePanchangToday(): UsePanchangTodayResult {
       cancelled = true;
     };
   }, [prefsLoading, preferences, fetchToken]);
+
+  useEffect(() => {
+    if (prefsLoading || !data) {
+      return;
+    }
+
+    const applyLive = () => {
+      setData((prev) =>
+        prev ? resolveLivePanchang(prev, preferences, new Date()) : null,
+      );
+    };
+
+    const intervalId = setInterval(applyLive, LIVE_REFRESH_INTERVAL_MS);
+
+    const delayMs = getNextPanchangTransitionMs(
+      data,
+      preferences.location.timezone,
+      new Date(),
+    );
+    const transitionTimeoutId =
+      delayMs !== null
+        ? setTimeout(applyLive, delayMs + 50)
+        : undefined;
+
+    return () => {
+      clearInterval(intervalId);
+      if (transitionTimeoutId !== undefined) {
+        clearTimeout(transitionTimeoutId);
+      }
+    };
+  }, [data, preferences, prefsLoading]);
 
   return {
     data,

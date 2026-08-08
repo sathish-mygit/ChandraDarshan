@@ -64,6 +64,10 @@ const adsConfig = {
       showForNewUsers: false,
       minWardrobeItems: 2,
     },
+    [Placement.INTERSTITIAL_TO_MATCH]: {
+      showForNewUsers: false,
+      minWardrobeItems: 2,
+    },
     [Placement.INTERSTITIAL_TO_HOME]: {
       showForNewUsers: false,
       minWardrobeItems: 3,

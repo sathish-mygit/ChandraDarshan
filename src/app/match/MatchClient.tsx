@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { BirthProfileForm } from '@/components/BirthProfileForm';
 import { BirthProfileSummary } from '@/components/BirthProfileSummary';
 import { KundaliMatchContent } from '@/components/KundaliMatchContent';
 import { useAppPreferences } from '@/contexts/AppPreferencesContext';
 import { useKundaliMatch } from '@/hooks/useKundaliMatch';
+import { trackBirthEditOpened, trackMatchViewed } from '@/lib/analytics';
 import { t } from '@/lib/i18n/labels';
 import type { BirthProfile } from '@/lib/types';
 
@@ -23,6 +24,32 @@ export function MatchClient() {
   const { data: matchData } = useKundaliMatch();
   const [showSelfEdit, setShowSelfEdit] = useState(!birthProfile);
   const [showPartnerEdit, setShowPartnerEdit] = useState(!partnerBirthProfile);
+  const lastMatchViewKeyRef = useRef('');
+
+  useEffect(() => {
+    if (!matchData) {
+      return;
+    }
+
+    const viewKey = [
+      matchData.qualityBand,
+      matchData.nadiDosha,
+      matchData.bhakootDosha,
+      matchData.synastry.unlocked,
+    ].join(':');
+
+    if (viewKey === lastMatchViewKeyRef.current) {
+      return;
+    }
+
+    lastMatchViewKeyRef.current = viewKey;
+    trackMatchViewed({
+      qualityBand: matchData.qualityBand,
+      hasNadiDosha: matchData.nadiDosha,
+      hasBhakootDosha: matchData.bhakootDosha,
+      synastryUnlocked: matchData.synastry.unlocked,
+    });
+  }, [matchData]);
 
   async function handleSaveSelf(profile: BirthProfile) {
     await updateBirthProfile(profile);
@@ -107,7 +134,14 @@ export function MatchClient() {
               <div className="mt-4 flex flex-wrap gap-3">
                 <button
                   type="button"
-                  onClick={() => setShowSelfEdit((v) => !v)}
+                  onClick={() =>
+                    setShowSelfEdit((value) => {
+                      if (!value) {
+                        trackBirthEditOpened('self');
+                      }
+                      return !value;
+                    })
+                  }
                   className="text-sm font-medium text-amber-300 hover:text-amber-200"
                 >
                   {t('editBirthDetails', language)}
@@ -115,7 +149,14 @@ export function MatchClient() {
                 {partnerBirthProfile ? (
                   <button
                     type="button"
-                    onClick={() => setShowPartnerEdit((v) => !v)}
+                    onClick={() =>
+                      setShowPartnerEdit((value) => {
+                        if (!value) {
+                          trackBirthEditOpened('partner');
+                        }
+                        return !value;
+                      })
+                    }
                     className="text-sm font-medium text-amber-300 hover:text-amber-200"
                   >
                     {t('editPartnerDetails', language)}

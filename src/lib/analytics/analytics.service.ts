@@ -4,12 +4,14 @@ import { Capacitor } from '@capacitor/core';
 import { FirebaseAnalytics } from '@capacitor-firebase/analytics';
 import {
   logEvent as logFirebaseEvent,
-  setCurrentScreen,
   setUserProperties,
 } from 'firebase/analytics';
 import { isAnalyticsEnabled } from '@/config/analytics';
 import { getFirebaseAnalytics } from '@/lib/firebase/client';
-import { getRouteMetadata } from '@/lib/analytics/route-metadata';
+import {
+  getRouteMetadata,
+  normalizeScreenPath,
+} from '@/lib/analytics/route-metadata';
 
 class AnalyticsService {
   private sessionStartTime = Date.now();
@@ -54,38 +56,31 @@ class AnalyticsService {
   }
 
   async logPageView(screenName: string): Promise<void> {
-    if (this.isDisabled(`screen_view:${screenName}`)) {
+    const screenPath = normalizeScreenPath(screenName);
+    if (this.isDisabled(`screen_view:${screenPath}`)) {
       return;
     }
 
     try {
-      const { page_title, route_segment } = getRouteMetadata(screenName);
+      const { route_segment } = getRouteMetadata(screenPath);
 
       if (Capacitor.isNativePlatform()) {
-        await FirebaseAnalytics.logEvent({
-          name: 'screen_view',
-          params: {
-            screen_name: screenName,
-            screen_class: 'ChandraDarshanApp',
-            page_title,
-            route_segment,
-          },
+        await FirebaseAnalytics.setCurrentScreen({
+          screenName: screenPath,
+          screenClassOverride: route_segment,
         });
         return;
       }
 
       const analytics = await getFirebaseAnalytics();
       if (analytics) {
-        setCurrentScreen(analytics, screenName);
         logFirebaseEvent(analytics, 'screen_view', {
-          firebase_screen: screenName,
-          firebase_screen_class: 'WebApp',
-          page_title,
-          route_segment,
+          firebase_screen: screenPath,
+          firebase_screen_class: route_segment,
         });
       }
     } catch (error) {
-      console.error(`[AnalyticsService] Error logging page view for ${screenName}:`, error);
+      console.error(`[AnalyticsService] Error logging page view for ${screenPath}:`, error);
     }
   }
 

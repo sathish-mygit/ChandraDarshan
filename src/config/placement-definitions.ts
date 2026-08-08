@@ -29,6 +29,7 @@ function interstitialDef(
 
 export const DEFAULT_PLACEMENT_DEFINITIONS: Record<string, PlacementDefinition> = {
   [Placement.INTERSTITIAL_TO_JYOTISH]: interstitialDef(1, 3, 2),
+  [Placement.INTERSTITIAL_TO_MATCH]: interstitialDef(1, 3, 2),
   [Placement.INTERSTITIAL_TO_HOME]: interstitialDef(1, 2, 3),
   [Placement.INTERSTITIAL_TO_SETTINGS]: interstitialDef(1, 2, 3),
 };

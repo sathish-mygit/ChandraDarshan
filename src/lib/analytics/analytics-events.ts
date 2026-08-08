@@ -10,6 +10,14 @@ export const ANALYTICS_EVENTS = {
   ASTRO_PAGE_VISITED: 'astro_page_visited',
   MATCH_PAGE_VISITED: 'match_page_visited',
   SETTINGS_PAGE_VISITED: 'settings_page_visited',
+  NAV_TAPPED: 'nav_tapped',
+  PANCHANG_REFRESHED: 'panchang_refreshed',
+  INSIGHT_EXPANDED: 'insight_expanded',
+  MATCH_VIEWED: 'match_viewed',
+  BIRTH_EDIT_OPENED: 'birth_edit_opened',
+  LEARN_SEARCH_USED: 'learn_search_used',
+  LEARN_ARTICLE_VIEWED: 'learn_article_viewed',
+  GPS_LOCATION_USED: 'gps_location_used',
 } as const;
 
 export type PreferenceSetting =
@@ -17,6 +25,10 @@ export type PreferenceSetting =
   | 'masa_system'
   | 'location'
   | 'daily_reminder';
+
+export type NavDestination = 'home' | 'astro' | 'match' | 'settings';
+export type BirthEditVariant = 'self' | 'partner';
+export type GpsLocationResult = 'success' | 'denied' | 'error';
 
 export function preferenceChangedParams(
   setting: PreferenceSetting,
@@ -31,4 +43,48 @@ export function birthProfileSavedParams(hasBirthTime: boolean): Record<string, s
 
 export function glossaryOpenedParams(termId: string): Record<string, string> {
   return { term_id: termId };
+}
+
+export function navTappedParams(destination: NavDestination): Record<string, string> {
+  return { destination };
+}
+
+export function insightExpandedParams(
+  insightKey: string,
+  expanded: boolean,
+): Record<string, string> {
+  return {
+    insight_key: insightKey,
+    expanded: expanded ? 'true' : 'false',
+  };
+}
+
+export function matchViewedParams(params: {
+  qualityBand: string;
+  hasNadiDosha: boolean;
+  hasBhakootDosha: boolean;
+  synastryUnlocked: boolean;
+}): Record<string, string> {
+  return {
+    quality_band: params.qualityBand,
+    has_nadi_dosha: params.hasNadiDosha ? 'true' : 'false',
+    has_bhakoot_dosha: params.hasBhakootDosha ? 'true' : 'false',
+    synastry_unlocked: params.synastryUnlocked ? 'true' : 'false',
+  };
+}
+
+export function birthEditOpenedParams(variant: BirthEditVariant): Record<string, string> {
+  return { variant };
+}
+
+export function learnSearchUsedParams(queryLength: number): Record<string, number> {
+  return { query_length: queryLength };
+}
+
+export function learnArticleViewedParams(articleId: string): Record<string, string> {
+  return { article_id: articleId };
+}
+
+export function gpsLocationUsedParams(result: GpsLocationResult): Record<string, string> {
+  return { result };
 }

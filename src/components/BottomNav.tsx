@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { CalendarDays, Heart, Settings, Sparkles } from 'lucide-react';
+import { trackNavTapped } from '@/lib/analytics';
+import type { NavDestination } from '@/lib/analytics/analytics-events';
 import { t } from '@/lib/i18n/labels';
 import { useAppPreferences } from '@/contexts/AppPreferencesContext';
 import { cn } from '@/lib/utils';
@@ -12,24 +14,28 @@ const TABS = [
     href: '/',
     labelKey: 'tabToday' as const,
     icon: CalendarDays,
+    destination: 'home' as const satisfies NavDestination,
     isActive: (pathname: string) => pathname === '/' || pathname === '',
   },
   {
     href: '/jyotish/',
     labelKey: 'tabJyotish' as const,
     icon: Sparkles,
+    destination: 'astro' as const satisfies NavDestination,
     isActive: (pathname: string) => pathname.startsWith('/jyotish'),
   },
   {
     href: '/match/',
     labelKey: 'tabMatch' as const,
     icon: Heart,
+    destination: 'match' as const satisfies NavDestination,
     isActive: (pathname: string) => pathname.startsWith('/match'),
   },
   {
     href: '/settings/',
     labelKey: 'tabSettings' as const,
     icon: Settings,
+    destination: 'settings' as const satisfies NavDestination,
     isActive: (pathname: string) => pathname.startsWith('/settings'),
   },
 ];
@@ -53,6 +59,7 @@ export function BottomNav() {
             <Link
               key={tab.href}
               href={tab.href}
+              onClick={() => trackNavTapped(tab.destination)}
               className={cn(
                 'flex flex-1 flex-col items-center gap-1 py-3 text-xs transition',
                 active
