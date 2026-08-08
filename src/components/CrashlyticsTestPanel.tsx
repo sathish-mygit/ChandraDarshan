@@ -7,8 +7,9 @@ import { crashlyticsService } from '@/lib/analytics/crashlytics.service';
 
 export function CrashlyticsTestPanel() {
   const [message, setMessage] = useState('');
+  const debugApp = process.env.NEXT_PUBLIC_TEST_MODE !== 'false';
 
-  if (!Capacitor.isNativePlatform() || !isAnalyticsEnabled()) {
+  if (!debugApp || !Capacitor.isNativePlatform() || !isAnalyticsEnabled()) {
     return null;
   }
 
@@ -22,8 +23,8 @@ export function CrashlyticsTestPanel() {
       <div>
         <h2 className="text-sm font-medium text-rose-100">Crashlytics</h2>
         <p className="mt-1 text-xs text-slate-400">
-          Use once after a prod debug build to enable Crashlytics in Firebase Console.
-          The fatal test will close the app immediately.
+          Test mode only — verify Crashlytics in Firebase Console. The fatal test
+          will close the app immediately.
         </p>
       </div>
 
