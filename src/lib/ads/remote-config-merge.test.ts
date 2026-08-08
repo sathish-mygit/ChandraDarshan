@@ -9,7 +9,22 @@ describe('mergeConfigWithDefaults', () => {
       settings: { 'banner.home': false },
     });
     expect(merged.settings['banner.home']).toBe(false);
+    expect(merged.settings['ads.master']).toBe(true);
+    expect(merged.settings['interstitial.toJyotish']).toBe(true);
+    expect(merged.settings['interstitial.toMatch']).toBe(true);
+  });
+
+  it('remote config overrides defaults to disable placements', () => {
+    const merged = mergeConfigWithDefaults({
+      settings: {
+        'ads.master': false,
+        'interstitial.toJyotish': false,
+        'interstitial.toMatch': false,
+      },
+    });
     expect(merged.settings['ads.master']).toBe(false);
+    expect(merged.settings['interstitial.toJyotish']).toBe(false);
+    expect(merged.settings['interstitial.toMatch']).toBe(false);
   });
 
   it('routes interstitial limits into interstitial object', () => {
