@@ -224,6 +224,9 @@ export function SettingsClient() {
             <h2 className="text-sm font-medium text-amber-100">
               {t('location', language)}
             </h2>
+            <p className="mt-1 text-xs text-slate-400">
+              {t('locationDescription', language)}
+            </p>
             <div className="mt-3 space-y-3">
               <CityPicker
                 value={preferences.location}
