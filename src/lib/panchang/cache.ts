@@ -43,6 +43,7 @@ function deserializeTithiTimeline(
     start: entry.start ? new Date(entry.start) : null,
     end: entry.end ? new Date(entry.end) : null,
     isCurrent: entry.isCurrent ?? false,
+    paksha: entry.paksha,
   }));
 }
 

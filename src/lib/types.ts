@@ -338,6 +338,8 @@ export type TithiTimingEntry = {
   start: Date | null;
   end: Date | null;
   isCurrent: boolean;
+  /** Stored so cached timelines can resolve paksha without recomputing daily panchang. */
+  paksha?: Paksha;
 };
 
 export type PanchangViewModel = {

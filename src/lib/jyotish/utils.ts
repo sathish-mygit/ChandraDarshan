@@ -1,18 +1,12 @@
 import type { BirthProfile, StoredLocation } from '../types';
 import { toLibraryLanguage } from '../i18n/locale';
+import { resolveTimezoneOffsetMinutes } from '../panchang/time';
 
 export { toLibraryLanguage };
 
-function timezoneOffsetMinutes(timezone: number | string): number {
-  if (typeof timezone === 'number') {
-    return timezone;
-  }
-  return 330;
-}
-
 export function birthInstantFromProfile(profile: BirthProfile): Date {
   const [year, month, day] = profile.birthDate.split('-').map(Number);
-  const offset = timezoneOffsetMinutes(profile.birthLocation.timezone);
+  const offset = resolveTimezoneOffsetMinutes(profile.birthLocation.timezone);
 
   let hours = 12;
   let minutes = 0;
